@@ -1,4 +1,5 @@
 using NærByg.Client.Pages;
+using NærByg.Client.Services;
 using NærByg.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,4 +31,5 @@ app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(NærByg.Client._Imports).Assembly);
 
+//app.Run("http://192.168.1.36:5003/");
 app.Run();

@@ -1,19 +1,33 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<div class="container-fluid">
+    <div class="row">
+        <main>
+            <article>
+                @Body
+            </article>
+        </main>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+        <!-- FOOTER -->
+        <div class="container">
+            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+                <p class="col-md-4 mb-0 text-body-secondary">&copy; 2025 NærByg, Inc</p>
+
+                <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none" aria-label="Bootstrap">
+                    <img src="/logo.svg" alt="Logo" width="50" height="50">
+                </a>
+
+                <ul class="nav col-md-4 justify-content-end">
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Hjem</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">bla bla</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">bla bla</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">bla bla</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">bla bla</a></li>
+                </ul>
+            </footer>
         </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+        <!-- FOOTER -->
+    </div>
 </div>
 
 <div id="blazor-error-ui">

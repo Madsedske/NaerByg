@@ -1,9 +1,15 @@
-﻿@page "/counter"
+﻿@page "/Home"
 @rendermode InteractiveWebAssembly
+@using NærByg.Client.Services
+@inject APIService apiservice
 
-<PageTitle>Counter</PageTitle>
+@inject IJSRuntime JSRuntime
 
-<h1>Counter</h1>
+<PageTitle>Hjem</PageTitle>
+
+<h1>Home</h1>
+
+<img src="../wwwroot/Resources/Logo.svg" alt="Logo" width="60" height="60" class="rounded-pill mx-auto d-block">
 
 <p role="status">Current count: @currentCount</p>
 

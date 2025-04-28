@@ -1,5 +1,14 @@
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using NærByg.Client.Services;
 
-var builder = WebAssemblyHostBuilder.CreateDefault(args);
+internal class Program
+{
+    private static async Task Main(string[] args)
+    {
+        var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-await builder.Build().RunAsync();
+        builder.Services.AddScoped<APIService>();
+
+        await builder.Build().RunAsync();
+    }
+}
