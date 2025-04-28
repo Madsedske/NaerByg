@@ -1,25 +1,36 @@
-﻿@page "/Home"
+﻿@page "/"
 @rendermode InteractiveWebAssembly
 @using NærByg.Client.Services
-@inject APIService apiservice
+
 
 @inject IJSRuntime JSRuntime
 
 <PageTitle>Hjem</PageTitle>
 
-<h1>Home</h1>
-
-<img src="../wwwroot/Resources/Logo.svg" alt="Logo" width="60" height="60" class="rounded-pill mx-auto d-block">
-
-<p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+    <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+        <div class="col-md-5 p-lg-5 mx-auto my-5">
+            <h1 class="display-4 fw-normal">Find byggematerialer – lokalt og hurtigt</h1>
+            <p class="lead fw-normal">And an even wittier subheading to boot. Jumpstart your marketing efforts with this example based on Apple’s marketing pages.</p>
+            <a class="btn btn-outline-secondary" href="#">Coming soon</a>
+        </div>
+        <!--
+            <iframe
+            width="1000"
+            height="600"
+            frameborder="0" style="border:0"
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps/embed/v1/directions
+                ?key=AIzaSyDKO6ebfn7HyqxC20WyE16paoRSZE86fQw
+                &origin=NykøbingFalster+Denmark
+                &destination=Ringsted+Denmark
+                &avoid=tolls|highways"
+            allowfullscreen>
+            </iframe> -->
+        <!-- AIzaSyDKO6ebfn7HyqxC20WyE16paoRSZE86fQw -->
+        <div class="product-device shadow-sm d-none d-md-block"></div>
+        <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
+    </div>
 
 @code {
-    private int currentCount = 0;
 
-    private void IncrementCount()
-    {
-        currentCount++;
-    }
 }
