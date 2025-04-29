@@ -2,93 +2,144 @@
 @rendermode InteractiveWebAssembly
 @inject NavigationManager Navigation
 
-<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #242BAD;">
+<nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-        <img src="/logo.svg" alt="Logo" width="60" height="60" class="rounded-pill mx-auto d-block">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
+        <img src="/resources/Logo_kopi.png" alt="Logo" width="60" height="60" class="rounded-pill mx-auto d-block">
+       
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <!-- Byg kategori -->
+
+        <div class="collapse navbar-collapse" id="navbarScroll">
+            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                <!-- Byggematerialer kategori -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Byg
+                        Byggematerialer
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="nav-item dropend">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Belægning
-                            </a>
-                        </li>
-                        <li class="nav-item dropend">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Fliser & klinker
-                            </a>
-                        </li>
+                        <li><a class="dropdown-item" href="#">Befæstelse</a></li>
+                        <li><a class="dropdown-item" href="#">Gulv, loft & vægge</a></li>
+                        <li><a class="dropdown-item" href="#">Døre & vinduer</a></li>
+                        <li><a class="dropdown-item" href="#">Byggeplader</a></li>
+                        <li><a class="dropdown-item" href="#">Træ & brædder</a></li>
+                        <li><a class="dropdown-item" href="#">Konstruktion</a></li>
+                        <li><a class="dropdown-item" href="#">Tag</a></li>
+                        <li><a class="dropdown-item" href="#">Stiger & stilladser</a></li>
                     </ul>
                 </li>
-                <!-- Have & Fritid kategori -->
+                <!-- Haven kategori -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Have & Fritid
+                        Haven
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="nav-item dropend">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Blomster, planter & krukker
-                            </a>
-                        </li>
-                        <li class="nav-item dropend">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Dropdown
-                            </a>
-                        </li>
+                        <li><a class="dropdown-item" href="#">Hegn</a></li>
+                        <li><a class="dropdown-item" href="#">Havemøbler</a></li>
+                        <li><a class="dropdown-item" href="#">Haveredskaber</a></li>
+                        <li><a class="dropdown-item" href="#">Havemaskiner</a></li>
+                        <li><a class="dropdown-item" href="#">Havebygninger</a></li>
+                        <li><a class="dropdown-item" href="#">Haveindretning</a></li>
+                        <li><a class="dropdown-item" href="#">Grill</a></li>
+                        <li><a class="dropdown-item" href="#">Vanding</a></li>
+                        <li><a class="dropdown-item" href="#">Beplantning</a></li>
+                        <li><a class="dropdown-item" href="#">Skadedyr & ukrudt</a></li>
                     </ul>
                 </li>
-                <!-- Bad kategori -->
+                <!-- Huset kategori -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Bad
+                        Huset
                     </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Husholdning</a></li>
+                        <li><a class="dropdown-item" href="#">Indretning</a></li>
+                        <li><a class="dropdown-item" href="#">Hylder & ophæng</a></li>
+                        <li><a class="dropdown-item" href="#">Flytning & opbevaring</a></li>
+                        <li><a class="dropdown-item" href="#">Alarmer & sikkerhed</a></li>
+                        <li><a class="dropdown-item" href="#">Borde</a></li>
+                        <li><a class="dropdown-item" href="#">Postkasser & standere</a></li>
+                        <li><a class="dropdown-item" href="#">Mosteri & syltning</a></li>                        
+                    </ul>
                 </li>
-                <!-- Dyr kategori -->
+                <!-- VVS kategori -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Dyr
+                        VVS
                     </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Toilet</a></li>
+                        <li><a class="dropdown-item" href="#">Vandhaner & armatur</a></li>
+                        <li><a class="dropdown-item" href="#">Vaske</a></li>
+                        <li><a class="dropdown-item" href="#">Varme & ventilation</a></li>
+                        <li><a class="dropdown-item" href="#">Afløb & kloak</a></li>
+                        <li><a class="dropdown-item" href="#">Rør & fittings</a></li>
+                        <li><a class="dropdown-item" href="#">Vandbehandling</a></li>
+                    </ul>
                 </li>
-                <!-- Bolig kategori -->
+                <!-- EL & belysning kategori -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Bolig
+                        EL & belysning
                     </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Indendørsbelysning</a></li>
+                        <li><a class="dropdown-item" href="#">Udendørsbelysning</a></li>
+                        <li><a class="dropdown-item" href="#">Lyskilder</a></li>
+                        <li><a class="dropdown-item" href="#">Smart home</a></li>
+                        <li><a class="dropdown-item" href="#">Dørklokker</a></li>
+                        <li><a class="dropdown-item" href="#">Arbejdsbelysning</a></li>
+                        <li><a class="dropdown-item" href="#">Antenne, Data & TV</a></li>
+                        <li><a class="dropdown-item" href="#">Batterier</a></li>
+                    </ul>
                 </li>
-                <!-- El & Belysning kategori -->
+                <!-- Maling & kemi kategori -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        El & Belysning
+                        Maling & kemi
                     </a>
-                </li>
-                <!-- Maling kategori -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Maling
-                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Udendørsmaling</a></li>
+                        <li><a class="dropdown-item" href="#">Indendørsmaling</a></li>
+                        <li><a class="dropdown-item" href="#">Malerudstyr</a></li>
+                        <li><a class="dropdown-item" href="#">Rengøring & kemikalier</a></li>
+                        <li><a class="dropdown-item" href="#">Spartel- & fugemasse</a></li>
+                        <li><a class="dropdown-item" href="#">Lim</a></li>
+                        <li><a class="dropdown-item" href="#">Vægbeklædning</a></li>
+                    </ul>
                 </li>
                 <!-- Værktøj kategori -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Værktøj
                     </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Elværktøj</a></li>
+                        <li><a class="dropdown-item" href="#">Håndværktøj</a></li>
+                        <li><a class="dropdown-item" href="#">Opbevaring af vørktøj</a></li>
+                        <li><a class="dropdown-item" href="#">Øvrige maskiner</a></li>
+                        <li><a class="dropdown-item" href="#">Skovredskaber</a></li>
+                        <li><a class="dropdown-item" href="#">Baljer & Spande</a></li>
+                    </ul>
                 </li>
-                <!-- VVS & varme kategori -->
+                <!-- Bil & fritid kategori -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        VVS & varme
+                        Bil & fritid
                     </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Autoudstyr</a></li>
+                        <li><a class="dropdown-item" href="#">Cykeludstyr</a></li>
+                        <li><a class="dropdown-item" href="#">Camping</a></li>
+                        <li><a class="dropdown-item" href="#">Dyreartikler</a></li>
+                        <li><a class="dropdown-item" href="#">Elektronik</a></li>
+                        <li><a class="dropdown-item" href="#">Leg & underholdning</a></li>
+                        <li><a class="dropdown-item" href="#">Sport & fritid</a></li>
+                        <li><a class="dropdown-item" href="#">Tøj & sko</a></li>
+                    </ul>
                 </li>
-            </ul>
+            </ul>           
         </div>
     </div>
 </nav>
