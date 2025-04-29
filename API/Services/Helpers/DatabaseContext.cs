@@ -14,10 +14,10 @@ namespace API.Services.Helpers
         {
         }
 
-       /* public IDbConnection CreateConnection()
+        public IDbConnection CreateConnection()
         {
             return Database.GetDbConnection();
-        }*/
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

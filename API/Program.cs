@@ -1,6 +1,11 @@
 using API.Services.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using API.Services;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+
 
 internal class Program
 {
@@ -28,12 +33,12 @@ internal class Program
             });
         });*/
 
-        /*builder.Services.AddScoped<IArduinoDataService, ArduinoDataService>();
-        builder.Services.AddScoped<IWebConfigService, WebConfigService>();
+        builder.Services.AddScoped<IProductService, ProductService>();
+        /*builder.Services.AddScoped<IWebConfigService, WebConfigService>();
         builder.Services.AddScoped<IUserConfigService, UserConfigService>();*/
 
         // Added builder service and configuration for databasecontext with connectionstring to the startup for better dependency injection.
-       /* var connectionString = builder.Configuration.GetConnectionString("connection");
+        var connectionString = builder.Configuration.GetConnectionString("connection");
         builder.Services.AddDbContext<DatabaseContext>(options =>
             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))); // Moved connectionstring to program.cs from DbContext
 
@@ -59,7 +64,7 @@ internal class Program
                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
                 .RequireAuthenticatedUser()
                 .Build());
-        });*/
+        });
 
         var app = builder.Build();
 
