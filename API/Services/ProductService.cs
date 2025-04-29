@@ -8,7 +8,6 @@ namespace API.Services
 {
     public class ProductService : IProductService
     {
-
         private readonly DatabaseContext _databaseContext;
 
         public ProductService(DatabaseContext databaseContext)
@@ -37,7 +36,7 @@ namespace API.Services
                     command.CommandType = CommandType.StoredProcedure;
 
                     // Add parameter to avoid SQL injection
-                    command.Parameters.AddWithValue("@SearchTerm", searchTerm);
+                    command.Parameters.AddWithValue("@search_term", searchTerm);
 
                     // Execute the query
                     using (var reader = command.ExecuteReader())
@@ -48,6 +47,7 @@ namespace API.Services
                             products.Add(new Product
                             {
                                 ProductId = reader.GetInt32("ProductId"),
+                                ProductSku = reader.GetString("ProductSku"),
                                 ProductName = reader.GetString("ProductName"),
                                 Brand = reader.GetString("Brand"),
                                 Price = reader.GetDouble("Price"),

@@ -10,6 +10,7 @@ namespace Shared.Models
     {
 
         public int ProductId { get; set; }
+        public required string ProductSku { get; set; }
         public required string ProductName { get; set; }
         public required string Brand { get; set; }
         public required double Price { get; set; }
