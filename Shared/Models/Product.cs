@@ -8,7 +8,6 @@ namespace Shared.Models
 {
     public class Product
     {
-
         public int ProductId { get; set; }
         public required string ProductSku { get; set; }
         public required string ProductName { get; set; }
