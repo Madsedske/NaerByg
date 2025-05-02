@@ -4,8 +4,8 @@ html, body {
 }
 
 .rowFills {
-    margin-top:100px;
-    margin-bottom:100px;
+    margin-top: 100px;
+    margin-bottom: 100px;
 }
 
 .myBorder { /*TEST*/
@@ -15,10 +15,13 @@ html, body {
 }
 
 .searchBarDiv {
-    padding:10px;
+    padding: 10px;
 }
 
 .searchBar {
+    width: 100%;
+    height: 30px;
+    border: 1px solid #242BAD;
     border-radius: 10px;
     border-color: #242BAD;
     box-shadow: 0px 0px 0px rgba(0, 0, 0, 0), /* Minimal shadow on top */
@@ -28,8 +31,74 @@ html, body {
 }
 
 .searchIconDiv {
-    align-content:center;
-    border-radius:10px;
+    background-color: white;
+    align-content: center;
+    border-radius: 20px;
+}
+
+.search-box {
+    height: fit-content;
+    position: center;
+}
+
+.input-search {
+    height: 40px;
+    width: 40px;
+    border-style: none;
+    padding: 10px;
+    font-size: 14px;
+    letter-spacing: 2px;
+    outline: none;
+    border-radius: 25px;
+    transition: all .5s ease-in-out;
+    background-color: #AD9224;
+    padding-right: 30px;
+    color: #242BAD;
+}
+
+    .input-search::placeholder {
+        color: #242BAD;
+        font-size: 18px;
+        letter-spacing: 2px;
+        font-weight: 100;
+    }
+
+.btn-search {
+    width: 40px;
+    height: 40px;
+    border-style: none;
+    font-size: 14px;
+    font-weight: bold;
+    outline: none;
+    cursor: pointer;
+    border-radius: 50%;
+    position: sticky;
+    right: 0px;
+    color: black;
+    background-color: transparent;
+    pointer-events: painted;
+}
+
+    .btn-search:focus {
+        color: #AD9224;
+    }
+
+        .btn-search:focus ~ .input-search {
+            width: 300px;
+            border-radius: 25px;
+            background-color: transparent;
+            border-bottom: 1px solid rgba(255,255,255,.5);
+            transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
+            border: 1px solid #242BAD;
+        }
+
+.input-search {
+    width: 300px;
+    border-radius: 25px;
+    background-color: transparent;
+    border-bottom: 1px solid rgba(255,255,255,.5);
+    transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
+    border: 1px solid #242BAD;
 }
 
 .footerFarve {
@@ -38,12 +107,33 @@ html, body {
     padding: 5px;
 }
 
+.cardProductList {
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid;
+    box-shadow: 0px -1px 10px rgba(0, 0, 0, 0.1), /* Minimal shadow on top */
+    2px 0px 10px rgba(0, 0, 0, 0.1), /* Medium shadow on the right */
+    -2px 0px 10px rgba(0, 0, 0, 0.1), /* Medium shadow on the left */
+    0px 4px 10px rgba(0, 0, 0, 0.1); /* Strong shadow on the bottom */
+    border-color: #242BAD;
+    margin-top: 30px;
+    background-color: white;
+}
+
+.cardTitle {
+    padding-left: 30px;
+    text-align: start;
+}
+
+.cardBody {
+}
+
 /*
     Primær: #242BAD 
     Sekunder: #4E9AD5
     Gul: #AD9224
 */
-
 .navbar {
     background-color: #242BAD;
 }
@@ -78,8 +168,8 @@ html, body {
 }
 
 .navbar-toggler-icon {
-    color:blue;
-    background-color:yellow;
+    color: blue;
+    background-color: yellow;
 }
 
 .dropdown .dropdown-menu {

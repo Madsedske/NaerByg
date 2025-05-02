@@ -7,6 +7,12 @@ internal class Program
     {
         var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
+        builder.Services.AddScoped(sp => new HttpClient
+        {
+            //BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
+            BaseAddress = new Uri("https://localhost:7045/")
+        });
+
         builder.Services.AddScoped<APIService>();
 
         await builder.Build().RunAsync();

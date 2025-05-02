@@ -1,4 +1,6 @@
 ﻿using System.Net.Http.Json;
+using System.Security.Cryptography.X509Certificates;
+using Shared.DTOs;
 
 namespace NærByg.Client.Services
 {
@@ -20,5 +22,13 @@ namespace NærByg.Client.Services
 
             return result ?? throw new InvalidOperationException("ButtonConfigResponse cannot be null. API related issue.");
         }*/
+
+        // Get all products from the searched
+        public async Task<List<ProductsResponse>> GetProductsFromSearched(ProductsRequest productsRequest)
+        {           
+            var response = await _httpClient.GetFromJsonAsync<List<ProductsResponse>>($"api/Product/GetProducts/{productsRequest.SearchTerm}");
+
+            return response ?? throw new InvalidOperationException("ProductsResponse cannot be null. API related issue.");
+        }
     }
 }

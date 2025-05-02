@@ -1,5 +1,6 @@
 ﻿using API.Services;
 using Microsoft.AspNetCore.Mvc;
+using Shared.DTOs;
 
 namespace API.Controllers
 {
@@ -17,8 +18,9 @@ namespace API.Controllers
         [HttpGet("GetProducts/{searchTerm}")]
         public IActionResult GetProducts(string searchTerm)
         {
-            var product = _productService.GetProducts(searchTerm);
-            return Ok(product);
+            List<ProductsResponse> products = _productService.GetProducts(searchTerm);
+
+            return Ok(products);
         }
     }
 }

@@ -14,4 +14,9 @@
     <ProjectReference Include="..\NærByg.Client\NærByg.Client.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\resources\bosch\" />
+    <Folder Include="wwwroot\resources\milwaukee\" />
+  </ItemGroup>
+
 </Project>

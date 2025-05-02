@@ -8,6 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
+builder.Services.AddHttpClient<APIService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:7045/"); // Timestamper.API base URL
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -31,5 +36,5 @@ app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(NærByg.Client._Imports).Assembly);
 
-//app.Run("http://192.168.1.36:5003/");
+//app.Run("http://localhost:5003/");
 app.Run();

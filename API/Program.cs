@@ -6,7 +6,6 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-
 internal class Program
 {
     private static void Main(string[] args)
@@ -21,20 +20,21 @@ internal class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+
         // Add CORS policy
-       /* builder.Services.AddCors(options =>
+       builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowBlazorClient", policy =>
             {
-                policy.WithOrigins("http://192.168.1.36:5003/") // Update with your Blazor WASM app URL				 
+                policy.WithOrigins("https://localhost:7252") // Update with your Blazor WASM app URL			// 5021 7252 
                      .AllowAnyHeader()
                       .AllowAnyMethod()
                       .AllowCredentials();
             });
-        });*/
+        });
 
         builder.Services.AddScoped<IProductService, ProductService>();
-        builder.Services.AddScoped<IProviderCheckService, ProviderCheckService>();
+        builder.Services.AddHttpClient<IProviderCheckService, ProviderCheckService>();
 
         // Added builder service and configuration for databasecontext with connectionstring to the startup for better dependency injection.
         var connectionString = builder.Configuration.GetConnectionString("connection");
@@ -73,6 +73,7 @@ internal class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+        app.UseCors("AllowBlazorClient");
 
         app.UseHttpsRedirection();
 
@@ -80,7 +81,7 @@ internal class Program
 
         app.MapControllers();
 
-        app.Run("http://192.168.1.36:5001/");
-        //app.Run();
+        //app.Run("http://localhost:5001/");
+        app.Run();
     }
 }
