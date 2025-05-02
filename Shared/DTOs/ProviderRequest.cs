@@ -9,6 +9,6 @@ namespace Shared.DTOs
     public class ProviderRequest
     {
         public required int ChainId { get; set; }
-        public required DateTime Time { get; set; }
+        public required DateTime LastSynced { get; set; }
     }
 }

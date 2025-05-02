@@ -29,7 +29,7 @@ namespace API.Controllers
             }
 
             // Check for which dataObject to get
-            if (dataObject == "Product")
+            if (dataObject == "product")
             {
                 var product = await _providerCheckService.GetProductsData(providerRequest, authResponse.Token);
 
@@ -39,7 +39,7 @@ namespace API.Controllers
                 }
                 return Ok(product);
             }
-            else if (dataObject == "Brand")
+            else if (dataObject == "brand")
             {
                 var Brand = await _providerCheckService.GetBrandsData(providerRequest, authResponse.Token);
 
@@ -49,7 +49,7 @@ namespace API.Controllers
                 }
                 return Ok(Brand);
             }
-            else if (dataObject == "Shop")
+            else if (dataObject == "shop")
             {
                 var Shop = await _providerCheckService.GetShopsData(providerRequest, authResponse.Token);
 
@@ -59,7 +59,7 @@ namespace API.Controllers
                 }
                 return Ok(Shop);
             }
-            else if (dataObject == "Categories")
+            else if (dataObject == "category")
             {
                 var Categories = await _providerCheckService.GetCategoriesData(providerRequest, authResponse.Token);
 
@@ -69,7 +69,7 @@ namespace API.Controllers
                 }
                 return Ok(Categories);
             }
-            else if (dataObject == "PostArea")
+            else if (dataObject == "post_area")
             {
                 var PostArea = await _providerCheckService.GetPostAreasData(providerRequest, authResponse.Token);
 
@@ -79,7 +79,7 @@ namespace API.Controllers
                 }
                 return Ok(PostArea);
             }
-            else if (dataObject == "MTMShopProduct")
+            else if (dataObject == "mtm_shop_product")
             {
                 var MTMShopProduct = await _providerCheckService.GetMTMShopsProductsData(providerRequest, authResponse.Token);
 
