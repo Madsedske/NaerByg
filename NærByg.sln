@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{DDF46A48-71C5-46ED-A165-A7FAAED9D648}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bmAPI", "bmAPI\bmAPI.csproj", "{204BE864-8EDE-4056-9970-EE7DE95BA3A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "bmAPI", "bmAPI\bmAPI.csproj", "{204BE864-8EDE-4056-9970-EE7DE95BA3A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

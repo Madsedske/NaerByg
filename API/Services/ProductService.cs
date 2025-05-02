@@ -3,6 +3,7 @@ using API.Services.Helpers;
 using Shared.DTOs;
 using Shared.Models;
 using System.Data;
+using System.Reflection.PortableExecutable;
 
 namespace API.Services
 {
@@ -15,10 +16,54 @@ namespace API.Services
             _databaseContext = databaseContext;
         }
 
-        public ProductsResponse GetProducts(string searchTerm)
+        public List<ProductsResponse> GetProducts(string searchTerm)
         {
+            var products = new List<ProductsResponse>();
 
-            var products = new List<Product>();
+            ProductsResponse productsResponse = new ProductsResponse
+            {
+                ProductId = 1,
+                ProductSku = "hg738h34h439f34",
+                ProductName = "Møtrækker",
+                Brand = "BOSCH",
+                Price = 453.4,
+                Stock = 3,
+                PictureURL = "/resources/bosch_møtrækker.jpg",
+                ChainLogoURL = "/fjeife/fejifje/jie.png",
+                ShopName = "Stærk",
+                ShopAddress = "Stærkvej 1",
+                ShopPostArea = "4100",
+                ShopCity = "Ringsted",
+                ShopPhoneNo = "69696969",
+                ShopOpeningHours = "Man: 09:00-18:00"
+            };
+
+            products.Add(productsResponse);
+
+            ProductsResponse productResponse = new ProductsResponse
+            {
+                ProductId = 2,
+                ProductSku = "hg7g433g348ggh34gf34",
+                ProductName = "Boremaskine",
+                Brand = "Milwaukee",
+                Price = 14233.4,
+                Stock = 12,
+                PictureURL = "/resources/milwaukee_boremaskine.jpg",
+                ChainLogoURL = "/fjeifje/jie.png",
+                ShopName = "Jex & Fim",
+                ShopAddress = "Jexvej 14",
+                ShopPostArea = "4100",
+                ShopCity = "Ringsted",
+                ShopPhoneNo = "12345678",
+                ShopOpeningHours = "tirsd: 09:00-18:00"
+            };
+
+            products.Add(productResponse);
+
+            return products;
+
+            /*
+            var products = new List<ProductsResponse>();
 
             using (var connection = _databaseContext.CreateConnection())
             {
@@ -44,7 +89,7 @@ namespace API.Services
                         // Read the results and populate the buttons list
                         while (reader.Read())
                         {
-                            products.Add(new Product
+                            ProductsResponse productsResponse = new ProductsResponse
                             {
                                 ProductId = reader.GetInt32("ProductId"),
                                 ProductSku = reader.GetString("ProductSku"),
@@ -60,19 +105,15 @@ namespace API.Services
                                 ShopCity = reader.GetString("ShopCity"),
                                 ShopPhoneNo = reader.GetString("ShopPhoneNo"),
                                 ShopOpeningHours = reader.GetString("ShopOpeningHours")
-                            });
-                            }
+                            };
+                            products.Add(productsResponse);
                         }
                     }
                     // Close the connection
                     connection.Close();
                 }
-                return new ProductsResponse
-                {
-                    Products = products
-                };
-            
+                return products;*/
         }
     }
-    
 }
+

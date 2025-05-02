@@ -12,6 +12,7 @@ namespace API.Services.Helpers
         /// 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
+
         }
 
         public IDbConnection CreateConnection()
