@@ -11,7 +11,7 @@ namespace Shared.DTOs
         public required int Id { get; set; }
         public required string Sku { get; set; }
         public required string Name { get; set; }
-        public required string CategoriId { get; set; }
+        public required string CategoryId { get; set; }
         public required string BrandId { get; set; }
         public required string ImageURL { get; set; }
     }

@@ -10,6 +10,6 @@ namespace Shared.DTOs
     {
         public required int Id { get; set; }
         public required string Name { get; set; }
-        public required int Parent { get; set; }
+        public required int ParentId { get; set; }
     }
 }
