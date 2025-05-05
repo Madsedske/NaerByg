@@ -1,7 +1,7 @@
 ﻿using Shared.DTOs;
 using System.Net.Http;
 
-namespace API.Services
+namespace API.Services.Interfaces
 {
     public interface IProviderCheckService
     {
