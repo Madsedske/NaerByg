@@ -10,9 +10,10 @@ namespace bmAPI.Services
         {
             _configuration = configuration;
         }
-        public async Task<AuthResponse> Authenticate(AuthRequest authReq)
+        public async Task<string> Authenticate(AuthRequest authReq)
         {
-            return await _configuration.Get<AuthResponse>(authReq);
+            return "fe"; 
+               //await _configuration.Get<AuthResponse>(authReq);
         }
     }
 }

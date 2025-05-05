@@ -1,13 +1,21 @@
 ﻿using API.Services.Helpers;
+using API.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using MySqlConnector;
 using Shared.DTOs;
-using Shared.Models;
 using System.Data;
 using System.Net.Http.Headers;
 
 namespace API.Services
 {
+    /// <summary>
+    /// Handles communication with external provider APIs for authentication and data retrieval.
+    /// Provides methods to authenticate using an API key and fetch various provider-related datasets such as products, brands, shops, and categories.
+    /// </summary>
+    /// <remarks>
+    /// This service acts as a bridge between the system and external APIs, handling HTTP requests and response mapping.
+    /// It uses an <see cref="HttpClient"/> instance and relies on configuration values for endpoint URLs and credentials.
+    /// </remarks>
     public class ProviderCheckService : IProviderCheckService
     {
         private readonly DatabaseContext _databaseContext;
@@ -25,10 +33,10 @@ namespace API.Services
         {
             var authRequest = new AuthRequest
             {
-                APIKey = _configuration["Auth:APIKey"]
+                APIKey = _configuration["ProviderApi:Auth:APIKey"]
             };
 
-            var authUrl = _configuration["Auth:Url"];
+            var authUrl = _configuration["ProviderApi:Auth:Url"];
 
             var response = await _httpClient.PostAsJsonAsync(authUrl, authRequest);
 
@@ -42,149 +50,37 @@ namespace API.Services
                 return null;
             }
         }
-
-        public async Task<BrandsResponse> GetBrandsData(ProviderRequest providerReq, string token)
+        private async Task<T?> PostAuthorizedAsync<T>(string url, ProviderRequest req, string token)
         {
-            var productUrl = _configuration["Product:Url"];
-
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, productUrl)
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, url)
             {
-                Content = JsonContent.Create(providerReq)
+                Content = JsonContent.Create(req)
             };
-
             httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var response = await _httpClient.SendAsync(httpRequest);
 
-            if (response.IsSuccessStatusCode)
-            {
-                var productResponse = await response.Content.ReadFromJsonAsync<BrandsResponse>();
-                return productResponse;
-            }
-            else
-            {
-                return null; // or throw new Exception("Product fetch failed");
-            }
+            return response.IsSuccessStatusCode
+                ? await response.Content.ReadFromJsonAsync<T>()
+                : default;
         }
 
-        public async Task<CategoriesResponse> GetCategoriesData(ProviderRequest providerReq, string token)
-        {
-            var productUrl = _configuration["Product:Url"];
+        public Task<BrandsResponse> GetBrandsData(ProviderRequest req, string token) =>
+             PostAuthorizedAsync<BrandsResponse>(url: _configuration["ProviderApi:BrandsUrl"], req, token);
 
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, productUrl)
-            {
-                Content = JsonContent.Create(providerReq)
-            };
+        public Task<CategoriesResponse> GetCategoriesData(ProviderRequest req, string token) =>
+            PostAuthorizedAsync<CategoriesResponse>(url: _configuration["ProviderApi:CategoriesUrl"], req, token);
 
-            httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        public Task<PostAreasResponse> GetPostAreasData(ProviderRequest req, string token) =>
+            PostAuthorizedAsync<PostAreasResponse>(url: _configuration["ProviderApi:postAreaUrl"], req, token);
 
-            var response = await _httpClient.SendAsync(httpRequest);
+        public Task<ProviderProductsResponse> GetProductsData(ProviderRequest req, string token) =>
+            PostAuthorizedAsync<ProviderProductsResponse>(url: _configuration["ProviderApi:ProductsUrl"], req, token);
 
-            if (response.IsSuccessStatusCode)
-            {
-                var productResponse = await response.Content.ReadFromJsonAsync<CategoriesResponse>();
-                return productResponse;
-            }
-            else
-            {
-                return null; // or throw new Exception("Product fetch failed");
-            }
-        }
+        public Task<ShopsResponse> GetShopsData(ProviderRequest req, string token) =>
+            PostAuthorizedAsync<ShopsResponse>(url: _configuration["ProviderApi:ShopsUrl"], req, token);
 
-        public async Task<PostAreasResponse> GetPostAreasData(ProviderRequest providerReq, string token)
-        {
-            var productUrl = _configuration["Product:Url"];
-
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, productUrl)
-            {
-                Content = JsonContent.Create(providerReq)
-            };
-
-            httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-            var response = await _httpClient.SendAsync(httpRequest);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var productResponse = await response.Content.ReadFromJsonAsync<PostAreasResponse>();
-                return productResponse;
-            }
-            else
-            {
-                return null; // or throw new Exception("Product fetch failed");
-            }
-        }
-
-        public async Task<ProviderProductsResponse> GetProductsData(ProviderRequest providerReq, string token)
-        {
-            var productUrl = _configuration["Product:Url"];
-
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, productUrl)
-            {
-                Content = JsonContent.Create(providerReq)
-            };
-
-            httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-            var response = await _httpClient.SendAsync(httpRequest);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var productResponse = await response.Content.ReadFromJsonAsync<ProviderProductsResponse>();
-                return productResponse;
-            }
-            else
-            {
-                return null; // or throw new Exception("Product fetch failed");
-            }
-        }
-
-        public async Task<ShopsResponse> GetShopsData(ProviderRequest providerReq, string token)
-        {
-            var productUrl = _configuration["Product:Url"];
-
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, productUrl)
-            {
-                Content = JsonContent.Create(providerReq)
-            };
-
-            httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-            var response = await _httpClient.SendAsync(httpRequest);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var productResponse = await response.Content.ReadFromJsonAsync<ShopsResponse>();
-                return productResponse;
-            }
-            else
-            {
-                return null; // or throw new Exception("Product fetch failed");
-            }
-        }
-
-        public async Task<MTMShopsProductsResponse> GetMTMShopsProductsData(ProviderRequest providerReq, string token)
-        {
-            var productUrl = _configuration["Product:Url"];
-
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, productUrl)
-            {
-                Content = JsonContent.Create(providerReq)
-            };
-
-            httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-            var response = await _httpClient.SendAsync(httpRequest);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var productResponse = await response.Content.ReadFromJsonAsync<MTMShopsProductsResponse>();
-                return productResponse;
-            }
-            else
-            {
-                return null; // or throw new Exception("Product fetch failed");
-            }
-        }
+        public Task<MTMShopsProductsResponse> GetMTMShopsProductsData(ProviderRequest req, string token) =>
+            PostAuthorizedAsync<MTMShopsProductsResponse>(url: _configuration["ProviderApi:mtm_shop_productUrl"], req, token);
     }
 }

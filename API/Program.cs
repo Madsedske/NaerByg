@@ -5,6 +5,7 @@ using API.Services;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using API.Services.Interfaces;
 
 internal class Program
 {

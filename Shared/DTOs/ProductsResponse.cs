@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Shared.Models;
 
 namespace Shared.DTOs
 {
@@ -18,6 +17,7 @@ namespace Shared.DTOs
         public required string PictureURL { get; set; }
         public required string ChainLogoURL { get; set; }
         public required string ShopName { get; set; }
+        public string DistanceToShop { get; set; }
         public required string ShopAddress { get; set; }
         public required string ShopPostArea { get; set; }
         public required string ShopCity { get; set; }
