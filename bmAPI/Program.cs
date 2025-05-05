@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
+using bmAPI.Services.Helpers;
 
 internal class Program
 {
@@ -32,9 +33,11 @@ internal class Program
         });*/
 
         // Added builder service and configuration for databasecontext with connectionstring to the startup for better dependency injection.
-        var connectionString = builder.Configuration.GetConnectionString("connection");
+        /*var connectionString = builder.Configuration.GetConnectionString("connection");
         builder.Services.AddDbContext<DatabaseContext>(options =>
-            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))); // Moved connectionstring to program.cs from DbContext
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))); */// Moved connectionstring to program.cs from DbContext
+
+        builder.Services.AddScoped<IDbContextFactory, DbContextFactory>();
 
         var configuration = builder.Configuration;
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

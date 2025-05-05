@@ -37,6 +37,7 @@ internal class Program
         builder.Services.AddHttpClient<IProviderCheckService, ProviderCheckService>();
 
         // Added builder service and configuration for databasecontext with connectionstring to the startup for better dependency injection.
+ 
         var connectionString = builder.Configuration.GetConnectionString("connection");
         builder.Services.AddDbContext<DatabaseContext>(options =>
             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))); // Moved connectionstring to program.cs from DbContext
