@@ -1,4 +1,6 @@
-﻿using API.Services.Interfaces;
+﻿using API.Enums;
+using API.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Shared.DTOs;
 
 namespace API.Services
@@ -12,19 +14,18 @@ namespace API.Services
             _providerCheckService = providerCheckService;
         }
 
-        public async Task<object?> GetDataAsync(string dataObject, ProviderRequest request, string token)
+        public async Task<object?> GetDataAsync(DataObjectType dataObject, ProviderRequest request, string token)
         {
             return dataObject switch
             {
-                "product" => await _providerCheckService.GetProductsData(request, token),
-                "brand" => await _providerCheckService.GetBrandsData(request, token),
-                "shop" => await _providerCheckService.GetShopsData(request, token),
-                "category" => await _providerCheckService.GetCategoriesData(request, token),
-                "post_area" => await _providerCheckService.GetPostAreasData(request, token),
-                "mtm_shop_product" => await _providerCheckService.GetMTMShopsProductsData(request, token),
+                DataObjectType.Product => await _providerCheckService.GetProductsData(request, token),
+                DataObjectType.Brand => await _providerCheckService.GetBrandsData(request, token),
+                DataObjectType.Shop => await _providerCheckService.GetShopsData(request, token),
+                DataObjectType.Category => await _providerCheckService.GetCategoriesData(request, token),
+                DataObjectType.PostArea => await _providerCheckService.GetPostAreasData(request, token),
+                DataObjectType.MtmShopProduct => await _providerCheckService.GetMtmShopProductsData(request, token),
                 _ => null
             };
         }
     }
-
 }
