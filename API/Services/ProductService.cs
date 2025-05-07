@@ -16,11 +16,11 @@ namespace API.Services
             _databaseContext = databaseContext;
         }
 
-        public List<ProductsResponse> GetProducts(string searchTerm)
+        public List<ProductResponse> GetProducts(string searchTerm)
         {
-            var products = new List<ProductsResponse>();
+            var products = new List<ProductResponse>();
 
-            ProductsResponse productsResponse = new ProductsResponse
+            ProductResponse productsResponse = new ProductResponse
             {
                 ProductId = 1,
                 ProductSku = "hg738h34h439f34",
@@ -40,7 +40,7 @@ namespace API.Services
 
             products.Add(productsResponse);
 
-            ProductsResponse productResponse = new ProductsResponse
+            ProductResponse productResponse = new ProductResponse
             {
                 ProductId = 2,
                 ProductSku = "hg7g433g348ggh34gf34",

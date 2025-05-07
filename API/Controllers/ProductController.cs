@@ -29,7 +29,7 @@ namespace API.Controllers
         [HttpGet("GetProducts/{searchTerm}")]
         public IActionResult GetProducts(string searchTerm)
         {
-            List<ProductsResponse> products = _productService.GetProducts(searchTerm);
+            List<ProductResponse> products = _productService.GetProducts(searchTerm);
 
             if (products == null || products.Count == 0)
                 return NotFound($"No products found matching: {searchTerm}");

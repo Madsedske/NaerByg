@@ -157,7 +157,7 @@
     private string kmRadiusValue { get; set; } = string.Empty;
     private string DistanceToShop { get; set; } = string.Empty;
 
-    private List<ProductsResponse> ProductListItems { get; set; } = new List<ProductsResponse>();
+    private List<ProductResponse> ProductListItems { get; set; } = new List<ProductResponse>();
     private ProductsRequest _ProductsRequest = new ProductsRequest
         {
             SearchTerm = string.Empty
@@ -182,7 +182,7 @@
                     SearchTerm = SearchItemInput
                 };
 
-            List<ProductsResponse> productsResponse = await APIService.GetProductsFromSearched(request);
+            List<ProductResponse> productsResponse = await APIService.GetProductsFromSearched(request);
 
             if (productsResponse != null && productsResponse.Count > 0)
             {
@@ -212,7 +212,7 @@
 
     }
 
-    private async Task AddDistanceToProducts(List<ProductsResponse> products)
+    private async Task AddDistanceToProducts(List<ProductResponse> products)
     {
         var tasks = products.Select(async p =>
         {
