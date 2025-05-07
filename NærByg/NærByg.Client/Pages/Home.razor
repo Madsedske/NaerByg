@@ -196,7 +196,7 @@
                     SearchTerm = SearchItemInput
                 };
 
-            List<ProductsResponse> productsResponse = await APIService.GetProductsFromSearched(request);
+            List<ProductResponse> productsResponse = await APIService.GetProductsFromSearched(request);
 
             if (productsResponse != null && productsResponse.Count > 0)
             {

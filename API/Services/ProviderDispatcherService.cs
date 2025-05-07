@@ -21,7 +21,7 @@ namespace API.Services
                 "shop" => await _providerCheckService.GetShopsData(request, token),
                 "category" => await _providerCheckService.GetCategoriesData(request, token),
                 "post_area" => await _providerCheckService.GetPostAreasData(request, token),
-                "mtm_shop_product" => await _providerCheckService.GetMTMShopsProductsData(request, token),
+                "mtm_shop_product" => await _providerCheckService.GetMtmShopProductsData(request, token),
                 _ => null
             };
         }
