@@ -24,7 +24,7 @@ namespace NærByg.Client.Services
         {
             var response = await _httpClient.GetFromJsonAsync<List<ProductsResponse>>($"api/Product/GetProducts/{productsRequest.SearchTerm}");
 
-            return response ?? throw new InvalidOperationException("ProductsResponse cannot be null. API related issue.");
+            return response ?? new List<ProductsResponse>();
         }
 
         /// <summary>
@@ -41,7 +41,8 @@ namespace NærByg.Client.Services
             var url = $"api/google/calculate?inputAddress={Uri.EscapeDataString(inputAddress)}&shopAddress={Uri.EscapeDataString(shopAddress)}&postarea={Uri.EscapeDataString(postarea)}";
 
             var result = await _httpClient.GetFromJsonAsync<GoogleDistanceResponse>(url);
-            return result ?? throw new InvalidOperationException("Google response is null.");
+            return result ?? throw new InvalidOperationException($"No response received from Google distance endpoint for address '{inputAddress}'");
+
         }
     }
 }

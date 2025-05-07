@@ -36,6 +36,7 @@ internal class Program
 
         builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddHttpClient<IProviderCheckService, ProviderCheckService>();
+        builder.Services.AddHttpClient<IGoogleService, GoogleService>();
 
         // Added builder service and configuration for databasecontext with connectionstring to the startup for better dependency injection.
         var connectionString = builder.Configuration.GetConnectionString("connection");

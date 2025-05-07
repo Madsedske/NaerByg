@@ -31,8 +31,8 @@ namespace API.Controllers
         {
             List<ProductsResponse> products = _productService.GetProducts(searchTerm);
 
-            if (products == null)
-                return NotFound($"No products matching word: {searchTerm} - or endpoint not found");
+            if (products == null || products.Count == 0)
+                return NotFound($"No products found matching: {searchTerm}");
 
             return Ok(products);
         }
