@@ -1,5 +1,6 @@
 ﻿using bmAPI.DTO;
 
+
 namespace bmAPI.Services
 {
     public class AuthService : IAuthService
@@ -10,10 +11,9 @@ namespace bmAPI.Services
         {
             _configuration = configuration;
         }
-        public async Task<string> Authenticate(AuthRequest authReq)
+       /* public async Task<AuthResponse> Authenticate(AuthRequest authReq)
         {
-            return "fe"; 
-               //await _configuration.Get<AuthResponse>(authReq);
-        }
+            return await _configuration.Get<AuthResponse>(authReq);
+        }*/
     }
 }

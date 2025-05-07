@@ -2,7 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace API.Services.Helpers
+namespace bmAPI.Services.Helpers
 {
     public class TokenManager
     {

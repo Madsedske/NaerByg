@@ -39,6 +39,10 @@ namespace NærByg.Client.Services
         public async Task<GoogleDistanceResponse> GoogleMatrixAPI(string inputAddress, string shopAddress, string postarea)
         {
             var url = $"api/google/calculate?inputAddress={Uri.EscapeDataString(inputAddress)}&shopAddress={Uri.EscapeDataString(shopAddress)}&postarea={Uri.EscapeDataString(postarea)}";
+        // Get all products from the searched
+        public async Task<List<ProductResponse>> GetProductsFromSearched(ProductRequest productsRequest)
+        {           
+            var response = await _httpClient.GetFromJsonAsync<List<ProductResponse>>($"api/Product/GetProducts/{productsRequest.SearchTerm}");
 
             var result = await _httpClient.GetFromJsonAsync<GoogleDistanceResponse>(url);
             return result ?? throw new InvalidOperationException($"No response received from Google distance endpoint for address '{inputAddress}'");

@@ -5,7 +5,9 @@ using API.Services;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using API.Services.Interfaces;
+using Microsoft.OpenApi.Models;
+using API.Enums;
+using Microsoft.OpenApi.Any;
 
 internal class Program
 {
@@ -19,7 +21,20 @@ internal class Program
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(c =>
+        {
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Nærbyg API", Version = "v1" });
+
+        c.UseInlineDefinitionsForEnums();
+        c.MapType<DataObjectType>(() => new OpenApiSchema
+        {
+            Type = "string",
+            Enum = Enum.GetNames(typeof(DataObjectType))
+                .Select(name => new OpenApiString(name))
+                .Cast<IOpenApiAny>()
+                .ToList()
+        });
+    });
 
 
         // Add CORS policy

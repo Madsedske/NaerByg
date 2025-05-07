@@ -1,6 +1,8 @@
-﻿using API.Services;
+﻿using API.Enums;
+using API.Services;
 using API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Shared.DTOs;
 using System.Runtime.CompilerServices;
 
@@ -19,16 +21,42 @@ namespace API.Controllers
             _providerCheckService = ProviderCheckService;
         }
 
-        /// <summary>
-        /// Handles authenticated requests to retrieve external provider data based on the specified data object type.
-        /// </summary>
-        /// <param name="dataObject">The type of data to retrieve (e.g., 'product', 'brand', 'shop').</param>
-        /// <param name="providerRequest">The request payload containing required parameters for the data fetch.</param>
-        /// <returns>An IActionResult containing the retrieved data or an error response.</returns>
+
         [HttpPost("GetProviderData/{dataObject}")]
-        public async Task<IActionResult> GetProviderData(string dataObject, [FromBody] ProviderRequest providerRequest)
+        public async Task<IActionResult> GetProviderData([FromRoute] DataObjectType dataObject, [FromBody] ProviderRequest request)
         {
-            // auth endpoint
+
+            // auth
+            var authResponse = new AuthResponse { Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" };
+                /*= await _providerCheckService.LoginAsync();
+            if (authResponse == null)
+                return BadRequest("Authentication failed");*/
+
+            // calling method depending of DataObjectType given
+            return dataObject switch
+            {
+                DataObjectType.Product => await TryGet(() => _providerCheckService.GetProductsData(request, authResponse.Token), "product"),
+                DataObjectType.Brand => await TryGet(() => _providerCheckService.GetBrandsData(request, authResponse.Token), "brand"),
+                DataObjectType.Shop => await TryGet(() => _providerCheckService.GetShopsData(request, authResponse.Token), "shop"),
+                DataObjectType.Category => await TryGet(() => _providerCheckService.GetCategoriesData(request, authResponse.Token), "category"),
+                DataObjectType.PostArea => await TryGet(() => _providerCheckService.GetPostAreasData(request, authResponse.Token), "post_area"),
+                DataObjectType.MtmShopProduct => await TryGet(() => _providerCheckService.GetMtmShopProductsData(request, authResponse.Token), "mtm_shop_product"),
+                _ => BadRequest("Unknown dataObject")
+            };
+        }
+
+        private async Task<IActionResult> TryGet<T>(Func<Task<T>> fetchFunc, string label)
+        {
+            var result = await fetchFunc();
+            return result == null ? BadRequest($"Failed to fetch {label} data") : Ok(result);
+        }
+
+       /* [HttpPost("GetProviderData/{dataObject}")] // chainname and datetime?
+        public async Task<IActionResult> GetProviderData(string dataObject, [FromBody]ProviderRequest providerRequest)
+        {
+
+
+            // auth
             var authResponse = await _providerCheckService.LoginAsync();
 
             if (authResponse == null)            

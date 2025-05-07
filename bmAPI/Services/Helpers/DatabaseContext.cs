@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Data;
 
-namespace API.Services.Helpers
+namespace bmAPI.Services.Helpers
 {
     public class DatabaseContext : DbContext
     {

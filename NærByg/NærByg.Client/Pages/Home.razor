@@ -158,7 +158,8 @@
     private string DistanceToShop { get; set; } = string.Empty;
 
     private List<ProductResponse> ProductListItems { get; set; } = new List<ProductResponse>();
-    private ProductsRequest _ProductsRequest = new ProductsRequest
+
+    private ProductRequest _ProductsRequest = new ProductRequest
         {
             SearchTerm = string.Empty
         };
@@ -177,7 +178,7 @@
         IsLoading = true;
         try
         {
-            var request = new ProductsRequest
+            var request = new ProductRequest
                 {
                     SearchTerm = SearchItemInput
                 };
