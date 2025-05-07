@@ -55,26 +55,7 @@ namespace API.Services
             return value;
         }
 
-        private async Task<TResponse> FetchFromProvider<TResponse>(
-            ProviderRequest request,
-            string token,
-            DataObjectType type
-)
-            var authUrl = _configuration["ProviderApi:Auth:Url"];
-
-            var response = await _httpClient.PostAsJsonAsync(authUrl, authRequest);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>();
-                return authResponse;
-            }
-            else
-            {
-                return null;
-            }
-        }
-        private async Task<T?> PostAuthorizedAsync<T>(string url, ProviderRequest req, string token)
+        private async Task<TResponse> FetchFromProvider<TResponse>(ProviderRequest request, string token, DataObjectType type)
         {
             var url = GetUrlFor(type);
             Console.WriteLine($"[API] Fetching from: {url}");
@@ -87,53 +68,29 @@ namespace API.Services
 
             var response = await _httpClient.SendAsync(httpRequest);
 
-            var responseBody = await response.Content.ReadAsStringAsync();
             Console.WriteLine($"[API] StatusCode: {response.StatusCode}");
-            Console.WriteLine($"[API] Raw body: {responseBody}");
-
+            
             if (!response.IsSuccessStatusCode)
             {
-                Console.WriteLine($"[API] Request failed.");
-                return default;
+                Console.WriteLine($"[API] Request failed. StatusCode: {response.StatusCode}, Response: {await response.Content.ReadAsStringAsync()} ");
+                throw new HttpRequestException($"Failed to fetch data. Status: {response.StatusCode}");
             }
-
+            var responseBody = await response.Content.ReadAsStringAsync();
             try
             {
-                var parsed = JsonSerializer.Deserialize<TResponse>(responseBody);
-                Console.WriteLine($"[API] Deserialization OK.");
-                return parsed!;
+
+                var result = JsonSerializer.Deserialize<TResponse>(responseBody);
+                return result ?? throw new JsonException("Deserialized response is null.");
+
             }
-            catch (Exception ex)
+            catch (JsonException ex)
             {
                 Console.WriteLine($"[API] Deserialization failed: {ex.Message}");
-                return default;
+                throw;
             }
         }
-
-
-
-        /* private async Task<TResponse> FetchFromProvider<TResponse>(
-             ProviderRequest request,
-             string token,
-             DataObjectType type
-         )
-         {
-             var url = GetUrlFor(type);
-
-             var httpRequest = new HttpRequestMessage(HttpMethod.Post, url)
-             {
-                 Content = JsonContent.Create(request)
-             };
-             httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-             var response = await _httpClient.SendAsync(httpRequest);
-             if (!response.IsSuccessStatusCode) return default;
-
-             return await response.Content.ReadFromJsonAsync<TResponse>();
-         }
-
-         */
-        async Task<AuthResponse> IProviderCheckService.LoginAsync()
+         
+        public async Task<AuthResponse> LoginAsync()
         {
             return await Task.FromResult(new AuthResponse
             {
@@ -151,18 +108,17 @@ namespace API.Services
              if (response.IsSuccessStatusCode)
              {
                  var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>();
-                 return authResponse;
+                 return authResponse ?? throw new InvalidOperationException("Authentication response is null.");;
              }
              else
              {
-                 return null;
+                 throw new InvalidOperationException($"Authentication failed. StatusCode: {response.StatusCode}, Response: {await response.Content.ReadAsStringAsync()}");
              }*/
         }
 
         public Task<IEnumerable<ProviderProductResponse>> GetProductsData(ProviderRequest req, string token)
         {
-            return FetchFromProvider< IEnumerable<ProviderProductResponse>>(req, token, DataObjectType.Product);
-            
+            return FetchFromProvider<IEnumerable<ProviderProductResponse>>(req, token, DataObjectType.Product);
         }
 
         public Task<IEnumerable<BrandResponse>> GetBrandsData(ProviderRequest req, string token)
