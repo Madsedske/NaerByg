@@ -38,6 +38,6 @@ namespace API.Controllers
 
             return Ok(data);
        
-        }*/
+        }
     }
 }
