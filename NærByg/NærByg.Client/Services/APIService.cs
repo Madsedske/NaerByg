@@ -20,11 +20,11 @@ namespace NærByg.Client.Services
         /// <param name="productsRequest">The request containing the search term for product lookup.</param>
         /// <returns>A list of <see cref="ProductsResponse"/> objects matching the search criteria.</returns>
         /// <exception cref="InvalidOperationException">Thrown if the API response is null, indicating a potential API issue.</exception>
-        public async Task<List<ProductsResponse>> GetProductsFromSearched(ProductsRequest productsRequest)
+        public async Task<List<ProductResponse>> GetProductsFromSearched(ProductsRequest productsRequest)
         {
-            var response = await _httpClient.GetFromJsonAsync<List<ProductsResponse>>($"api/Product/GetProducts/{productsRequest.SearchTerm}");
+            var response = await _httpClient.GetFromJsonAsync<List<ProductResponse>>($"api/Product/GetProducts/{productsRequest.SearchTerm}");
 
-            return response ?? throw new InvalidOperationException("ProductsResponse cannot be null. API related issue.");
+            return response ?? new List<ProductResponse>();
         }
 
         /// <summary>
@@ -45,7 +45,8 @@ namespace NærByg.Client.Services
             var response = await _httpClient.GetFromJsonAsync<List<ProductResponse>>($"api/Product/GetProducts/{productsRequest.SearchTerm}");
 
             var result = await _httpClient.GetFromJsonAsync<GoogleDistanceResponse>(url);
-            return result ?? throw new InvalidOperationException("Google response is null.");
+            return result ?? throw new InvalidOperationException($"No response received from Google distance endpoint for address '{inputAddress}'");
+
         }
     }
 }
