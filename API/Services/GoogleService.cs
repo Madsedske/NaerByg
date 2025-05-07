@@ -7,11 +7,9 @@ namespace API.Services
     public class GoogleService : IGoogleService
     {
         private readonly HttpClient _httpClient;
-        private readonly IConfiguration _configuration;
 
         public GoogleService(HttpClient httpClient, IConfiguration configuration)
         {
-            _configuration = configuration;
             _httpClient = httpClient;
         }
 
