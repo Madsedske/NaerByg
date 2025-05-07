@@ -18,7 +18,7 @@ namespace API.Controllers
         [HttpGet("GetProducts/{searchTerm}")]
         public IActionResult GetProducts(string searchTerm)
         {
-            List<ProductsResponse> products = _productService.GetProducts(searchTerm);
+            List<ProductResponse> products = _productService.GetProducts(searchTerm);
 
             return Ok(products);
         }

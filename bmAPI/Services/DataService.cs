@@ -1,5 +1,6 @@
-﻿using API.Services.Helpers;
-using bmAPI.DTO;
+﻿using bmAPI.DTO;
+using bmAPI.Enums;
+using bmAPI.Extensions;
 using bmAPI.Services.Helpers;
 using MySqlConnector;
 using System.Data;
@@ -10,9 +11,9 @@ namespace bmAPI.Services
     public class DataService : IDataService
     {
         private readonly IConfiguration _configuration;
-        private readonly DbContextFactory _dbContextFactory;
+        private readonly IDbContextFactory _dbContextFactory;
 
-        public DataService(IConfiguration configuration, DbContextFactory dbContextFactory)
+        public DataService(IConfiguration configuration, IDbContextFactory dbContextFactory)
         {
             _configuration = configuration;
             _dbContextFactory = dbContextFactory;
@@ -20,7 +21,7 @@ namespace bmAPI.Services
 
         public List<ProductResponse> ReturnProducts(int chainId, DateTime lastUpdated)
         {
-            return ReturnData(chainId, lastUpdated, "product", reader => new ProductResponse
+            return ReturnData(chainId, lastUpdated, DataEndpoint.Product, reader => new ProductResponse
             {
                 ProductId = reader.GetInt32("product_id"),
                 Sku = reader.GetString("sku"),
@@ -37,7 +38,7 @@ namespace bmAPI.Services
 
         public List<ShopResponse> ReturnShops(int chainId, DateTime lastUpdated)
         {
-            return ReturnData(chainId, lastUpdated, "shop", reader => new ShopResponse
+            return ReturnData(chainId, lastUpdated, DataEndpoint.Shop, reader => new ShopResponse
             {
                 ShopId = reader.GetInt32("shop_id"),
                 Name = reader.GetString("name"),
@@ -52,9 +53,9 @@ namespace bmAPI.Services
             );
         }
 
-        public List<ShopProductResponse> ReturnShopProducts(int chainId, DateTime lastUpdated)
+        public List<MtmShopProductResponse> ReturnShopProducts(int chainId, DateTime lastUpdated)
         {
-            return ReturnData(chainId, lastUpdated, "mtm_shop_product", reader => new ShopProductResponse
+            return ReturnData(chainId, lastUpdated, DataEndpoint.MtmShopProduct, reader => new MtmShopProductResponse
             {
                 ShopProductId = reader.GetInt32("shop_product_id"),
                 ShopId = reader.GetInt32("shop_id"),
@@ -70,7 +71,7 @@ namespace bmAPI.Services
 
         public List<PostAreaResponse> ReturnPostAreas(int chainId, DateTime lastUpdated)
         {
-            return ReturnData(chainId, lastUpdated, "post_area", reader => new PostAreaResponse
+            return ReturnData(chainId, lastUpdated, DataEndpoint.PostArea, reader => new PostAreaResponse
             {
                 PostAreaId = reader.GetInt32("post_area_id"),
                 Code = reader.GetInt32("code"),
@@ -84,7 +85,7 @@ namespace bmAPI.Services
 
         public List<BrandResponse> ReturnBrands(int chainId, DateTime lastUpdated)
         {
-            return ReturnData(chainId, lastUpdated, "brand", reader => new BrandResponse
+            return ReturnData(chainId, lastUpdated, DataEndpoint.Brand, reader => new BrandResponse
             {
                 BrandId = reader.GetInt32("brand_id"),
                 Name = reader.GetString("name"),
@@ -97,7 +98,7 @@ namespace bmAPI.Services
 
         public List<CategoryResponse> ReturnCategories(int chainId, DateTime lastUpdated)
         {
-            return ReturnData(chainId, lastUpdated, "category", reader => new CategoryResponse
+            return ReturnData(chainId, lastUpdated, DataEndpoint.Category, reader => new CategoryResponse
                 {
                     CategoryId = reader.GetInt32("category_id"),
                     Name = reader.GetString("name"),
@@ -112,11 +113,11 @@ namespace bmAPI.Services
         public List<TResponse> ReturnData<TResponse>(
             int chainId,
             DateTime lastUpdated,
-            string endpoint,
+            DataEndpoint endpoint,
             Func<MySqlDataReader,TResponse> mapFunc
         )
         {
-            var storedProcedureName = $"ReturnData_{endpoint}";
+            var storedProcedureName = endpoint.ToStoredProcedureName();
             var data = new List<TResponse>();
 
             using (var context = _dbContextFactory.Create(chainId)) {
@@ -126,7 +127,7 @@ namespace bmAPI.Services
 
                     using var command = new MySqlCommand(storedProcedureName, (MySqlConnection)connection);
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@last_synced", lastUpdated);
+                    command.Parameters.AddWithValue("@last_update", lastUpdated);
 
                     using var reader = command.ExecuteReader();
                     while (reader.Read())

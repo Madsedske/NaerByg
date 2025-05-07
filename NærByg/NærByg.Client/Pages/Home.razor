@@ -176,8 +176,8 @@
     private string AdresseInput { get; set; } = string.Empty;
     private string kmRadiusValue { get; set; } = string.Empty;
 
-    private List<ProductsResponse> ProductListItems { get; set; } = new List<ProductsResponse>();
-    private ProductsRequest _ProductsRequest = new ProductsRequest
+    private List<ProductResponse> ProductListItems { get; set; } = new List<ProductResponse>();
+    private ProductRequest _ProductsRequest = new ProductRequest
         {
             SearchTerm = string.Empty
         };
@@ -196,12 +196,12 @@
         IsLoading = true;
         try
         {
-            var request = new ProductsRequest
+            var request = new ProductRequest
                 {
                     SearchTerm = SearchItemInput
                 };
 
-            List<ProductsResponse> ProductsResponse = await APIService.GetProductsFromSearched(request);
+            List<ProductResponse> ProductsResponse = await APIService.GetProductsFromSearched(request);
 
             if (ProductsResponse != null && ProductsResponse.Count > 0)
             {

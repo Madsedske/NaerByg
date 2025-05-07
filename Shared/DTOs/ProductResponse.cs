@@ -7,7 +7,7 @@ using Shared.Models;
 
 namespace Shared.DTOs
 {
-    public class ProductsResponse
+    public class ProductResponse
     {
         public int ProductId { get; set; }
         public required string ProductSku { get; set; }

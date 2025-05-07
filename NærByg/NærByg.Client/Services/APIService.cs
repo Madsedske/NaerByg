@@ -24,9 +24,9 @@ namespace NærByg.Client.Services
         }*/
 
         // Get all products from the searched
-        public async Task<List<ProductsResponse>> GetProductsFromSearched(ProductsRequest productsRequest)
+        public async Task<List<ProductResponse>> GetProductsFromSearched(ProductRequest productsRequest)
         {           
-            var response = await _httpClient.GetFromJsonAsync<List<ProductsResponse>>($"api/Product/GetProducts/{productsRequest.SearchTerm}");
+            var response = await _httpClient.GetFromJsonAsync<List<ProductResponse>>($"api/Product/GetProducts/{productsRequest.SearchTerm}");
 
             return response ?? throw new InvalidOperationException("ProductsResponse cannot be null. API related issue.");
         }

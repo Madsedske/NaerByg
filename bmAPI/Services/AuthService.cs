@@ -11,9 +11,9 @@ namespace bmAPI.Services
         {
             _configuration = configuration;
         }
-        public async Task<AuthResponse> Authenticate(AuthRequest authReq)
+       /* public async Task<AuthResponse> Authenticate(AuthRequest authReq)
         {
             return await _configuration.Get<AuthResponse>(authReq);
-        }
+        }*/
     }
 }

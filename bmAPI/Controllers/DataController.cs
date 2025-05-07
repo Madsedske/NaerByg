@@ -15,50 +15,50 @@ namespace bmAPI.Controllers
             _dataService = dataService;
         }
 
-        [HttpGet("Brands/{chainId}")]
-        public IActionResult ReturnBrands(int chainId, DateTime lastSynced)
+        [HttpPost("brands")]
+        public IActionResult ReturnBrands([FromBody] DataProviderRequest request)
         {
-            List<BrandResponse> brands = _dataService.ReturnBrands(chainId, lastSynced);
+            List<BrandResponse> brands = _dataService.ReturnBrands(request.ChainId, request.LastSynced);
 
             return Ok(brands);
         }
         
-        [HttpGet("Categories/{chainId}")]
-        public IActionResult ReturnCategories(int chainId, DateTime lastSynced)
+        [HttpPost("categories")]
+        public IActionResult ReturnCategories([FromBody] DataProviderRequest request)
         {
-            List<CategoryResponse> categories = _dataService.ReturnCategories(chainId, lastSynced);
+            List<CategoryResponse> categories = _dataService.ReturnCategories(request.ChainId, request.LastSynced);
 
             return Ok(categories);
         }
 
-        [HttpGet("PostAreas/{chainId}")]
-        public IActionResult ReturnPostAreas(int chainId, DateTime lastSynced)
+        [HttpPost("postareas")]
+        public IActionResult ReturnPostAreas([FromBody] DataProviderRequest request)
         {
-            List<PostAreaResponse> postAreas = _dataService.ReturnPostAreas(chainId, lastSynced);
+            List<PostAreaResponse> postAreas = _dataService.ReturnPostAreas(request.ChainId, request.LastSynced);
 
             return Ok(postAreas);
         }
 
-        [HttpGet("Products/{chainId}")]
-        public IActionResult ReturnProducts(int chainId, DateTime lastSynced)
+        [HttpPost("products")]
+        public IActionResult ReturnProducts([FromBody] DataProviderRequest request)
         {
-            List<ProductResponse> products = _dataService.ReturnProducts(chainId, lastSynced);
+            List<ProductResponse> products = _dataService.ReturnProducts(request.ChainId, request.LastSynced);
 
             return Ok(products);
         }
 
-        [HttpGet("Shops/{chainId}")]
-        public IActionResult ReturnShops(int chainId, DateTime lastSynced)
+        [HttpPost("shops")]
+        public IActionResult ReturnShops([FromBody] DataProviderRequest request)
         {
-            List<ShopResponse> shops = _dataService.ReturnShops(chainId, lastSynced);
+            List<ShopResponse> shops = _dataService.ReturnShops(request.ChainId, request.LastSynced);
 
             return Ok(shops);
         }
 
-        [HttpGet("ShopProducts/{chainId}")]
-        public IActionResult ReturnShopProducts(int chainId, DateTime lastSynced)
+        [HttpPost("shopproducts")]
+        public IActionResult ReturnShopProducts([FromBody] DataProviderRequest request)
         {
-            List<ShopProductResponse> shopProducts = _dataService.ReturnShopProducts(chainId, lastSynced);
+            List<MtmShopProductResponse> shopProducts = _dataService.ReturnShopProducts(request.ChainId, request.LastSynced);
 
             return Ok(shopProducts);
         }

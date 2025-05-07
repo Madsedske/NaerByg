@@ -15,12 +15,12 @@ namespace bmAPI.Controllers
             _authService = authService;
         }
 
-        [HttpPost("GetProviderData")] // chainname and datetime?
+     /*   [HttpPost("GetProviderData")] // chainname and datetime?
         public async Task<IActionResult> SignIn([FromBody] AuthRequest authRequest)
         {
             var authResponse = await _authService.Authenticate(authRequest);
 
             return Ok(authResponse);
-        }
+        }*/
     }
 }

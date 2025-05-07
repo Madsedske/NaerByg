@@ -1,10 +1,10 @@
-using API.Services.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using bmAPI.Services.Helpers;
+using bmAPI.Services;
 
 internal class Program
 {
@@ -20,7 +20,7 @@ internal class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        /*// Add CORS policy
+        // Add CORS policy
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowBlazorClient", policy =>
@@ -30,7 +30,7 @@ internal class Program
                       .AllowAnyMethod()
                       .AllowCredentials();
             });
-        });*/
+        });
 
         // Added builder service and configuration for databasecontext with connectionstring to the startup for better dependency injection.
         /*var connectionString = builder.Configuration.GetConnectionString("connection");
@@ -38,6 +38,8 @@ internal class Program
             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))); */// Moved connectionstring to program.cs from DbContext
 
         builder.Services.AddScoped<IDbContextFactory, DbContextFactory>();
+        builder.Services.AddScoped<IDataService, DataService>();
+
 
         var configuration = builder.Configuration;
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -71,6 +73,7 @@ internal class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+        app.UseCors("AllowBlazorClient");
 
         app.UseHttpsRedirection();
 
@@ -78,6 +81,7 @@ internal class Program
 
         app.MapControllers();
 
-        app.Run("http://localhost:5002/");
+        //app.Run("http://localhost:5002/");
+        app.Run();
     }
 }

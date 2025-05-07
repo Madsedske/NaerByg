@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Shared.DTOs
 {
-    public class ProductsRequest
+    public class ProductRequest
     {
         public required string SearchTerm { get; set; }
     }

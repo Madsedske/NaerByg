@@ -1,6 +1,6 @@
 ﻿namespace bmAPI.DTO
 {
-    public class ShopProductResponse
+    public class MtmShopProductResponse
     {
         public required int ShopProductId { get; set; }
         public required int ShopId { get; set; }
