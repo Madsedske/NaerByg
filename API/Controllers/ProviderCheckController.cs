@@ -37,6 +37,7 @@ namespace API.Controllers
                 return BadRequest($"Failed to fetch data for {dataObject}");
 
             return Ok(data);
-        }
+       
+        }*/
     }
 }
