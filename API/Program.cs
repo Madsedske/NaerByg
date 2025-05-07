@@ -53,7 +53,6 @@ internal class Program
         builder.Services.AddHttpClient<IProviderCheckService, ProviderCheckService>();
 
         // Added builder service and configuration for databasecontext with connectionstring to the startup for better dependency injection.
- 
         var connectionString = builder.Configuration.GetConnectionString("connection");
         builder.Services.AddDbContext<DatabaseContext>(options =>
             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))); // Moved connectionstring to program.cs from DbContext
@@ -70,7 +69,6 @@ internal class Program
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
                     .GetBytes(configuration.GetSection("AppSettings")["Token"] ?? throw new InvalidOperationException("Token is not configured in AppSettings"))),
                     ValidateAudience = false,
-                    ValidateLifetime = false
                 };
             });
 

@@ -1,9 +1,9 @@
 ﻿using MySqlConnector;
 using API.Services.Helpers;
 using Shared.DTOs;
-using Shared.Models;
 using System.Data;
 using System.Reflection.PortableExecutable;
+using API.Services.Interfaces;
 
 namespace API.Services
 {
@@ -28,10 +28,10 @@ namespace API.Services
                 Brand = "BOSCH",
                 Price = 453.4,
                 Stock = 3,
-                PictureURL = "/resources/bosch_møtrækker.jpg",
+                PictureURL = "staerk/bahco/10.jpg",
                 ChainLogoURL = "/fjeife/fejifje/jie.png",
                 ShopName = "Stærk",
-                ShopAddress = "Stærkvej 1",
+                ShopAddress = "Toften 7",
                 ShopPostArea = "4100",
                 ShopCity = "Ringsted",
                 ShopPhoneNo = "69696969",
@@ -44,14 +44,14 @@ namespace API.Services
             {
                 ProductId = 2,
                 ProductSku = "hg7g433g348ggh34gf34",
-                ProductName = "Boremaskine",
-                Brand = "Milwaukee",
+                ProductName = "Monteringshammer",
+                Brand = "Bacho",
                 Price = 14233.4,
                 Stock = 12,
-                PictureURL = "/resources/milwaukee_boremaskine.jpg",
+                PictureURL = "harrag_nybold/bahco/11.jpg",
                 ChainLogoURL = "/fjeifje/jie.png",
-                ShopName = "Jex & Fim",
-                ShopAddress = "Jexvej 14",
+                ShopName = "Harrag Nybold",
+                ShopAddress = "Teglovnsvej 39",
                 ShopPostArea = "4100",
                 ShopCity = "Ringsted",
                 ShopPhoneNo = "12345678",

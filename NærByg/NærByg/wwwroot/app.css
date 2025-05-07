@@ -108,7 +108,6 @@ html, body {
 }
 
 .cardProductList {
-    text-align: center;
     padding: 10px;
     border-radius: 10px;
     border: 1px solid;
@@ -116,18 +115,33 @@ html, body {
     2px 0px 10px rgba(0, 0, 0, 0.1), /* Medium shadow on the right */
     -2px 0px 10px rgba(0, 0, 0, 0.1), /* Medium shadow on the left */
     0px 4px 10px rgba(0, 0, 0, 0.1); /* Strong shadow on the bottom */
-    border-color: #242BAD;
+    border-color: #AD9224;
     margin-top: 30px;
     background-color: white;
 }
 
+.productImg {
+    max-height: 150px;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+}
+
 .cardTitle {
-    padding-left: 30px;
     text-align: start;
+    padding:5px;
 }
 
 .cardBody {
+    text-align: start;
+    color: #242BAD;
+    font-size: 14px;
+    margin-top:10px;
 }
+
+    .cardBody .cardBodyText {
+        height: 30px;
+    }
 
 /*
     Primær: #242BAD 

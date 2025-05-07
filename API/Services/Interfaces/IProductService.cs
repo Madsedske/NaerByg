@@ -1,6 +1,6 @@
 ﻿using Shared.DTOs;
 
-namespace API.Services
+namespace API.Services.Interfaces
 {
     public interface IProductService
     {

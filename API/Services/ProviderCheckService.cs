@@ -1,9 +1,9 @@
 ﻿using API.Enums;
 using API.Services.Helpers;
+using API.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using MySqlConnector;
 using Shared.DTOs;
-using Shared.Models;
 using System.Data;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -11,6 +11,14 @@ using System.Text.Json;
 
 namespace API.Services
 {
+    /// <summary>
+    /// Handles communication with external provider APIs for authentication and data retrieval.
+    /// Provides methods to authenticate using an API key and fetch various provider-related datasets such as products, brands, shops, and categories.
+    /// </summary>
+    /// <remarks>
+    /// This service acts as a bridge between the system and external APIs, handling HTTP requests and response mapping.
+    /// It uses an <see cref="HttpClient"/> instance and relies on configuration values for endpoint URLs and credentials.
+    /// </remarks>
     public class ProviderCheckService : IProviderCheckService
     {
         private readonly DatabaseContext _databaseContext;
@@ -52,6 +60,21 @@ namespace API.Services
             string token,
             DataObjectType type
 )
+            var authUrl = _configuration["ProviderApi:Auth:Url"];
+
+            var response = await _httpClient.PostAsJsonAsync(authUrl, authRequest);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>();
+                return authResponse;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        private async Task<T?> PostAuthorizedAsync<T>(string url, ProviderRequest req, string token)
         {
             var url = GetUrlFor(type);
             Console.WriteLine($"[API] Fetching from: {url}");
