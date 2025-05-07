@@ -1,26 +1,26 @@
-﻿using bmAPI.Services;
+﻿using bmAPI.DTO;
+using bmAPI.Services;
 using Microsoft.AspNetCore.Mvc;
-using bmAPI.DTO;
 
-namespace bmAPI.Controllers
+[ApiController]
+[Route("bm/auth")]
+public class AuthController : ControllerBase
 {
-    [Route("bm/[controller]")]
-    [ApiController]
-    public class AuthController : ControllerBase
+    private readonly IAuthService _authService;
+
+    public AuthController(IAuthService authService)
     {
-        private readonly IAuthService _authService;
+        _authService = authService;
+    }
 
-        public AuthController(IAuthService authService)
-        {
-            _authService = authService;
-        }
+    [HttpPost("token")]
+    public IActionResult Login([FromBody] AuthRequest request)
+    {
+        var result = _authService.Authenticate(request.Username, request.Password);
 
-     /*   [HttpPost("GetProviderData")] // chainname and datetime?
-        public async Task<IActionResult> SignIn([FromBody] AuthRequest authRequest)
-        {
-            var authResponse = await _authService.Authenticate(authRequest);
+        if (result == null)
+            return Unauthorized("Invalid credentials");
 
-            return Ok(authResponse);
-        }*/
+        return Ok(result); // will return an AuthResponse { Token, ExpiryTime }
     }
 }

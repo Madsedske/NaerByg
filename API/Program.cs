@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using API.Enums;
 using Microsoft.OpenApi.Any;
 using API.Services.Interfaces;
+using NaerByg.Api.Middleware;
 
 internal class Program
 {
@@ -96,6 +97,8 @@ internal class Program
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
+
+        app.UseMiddleware<ApiKeyMiddleware>();
 
         app.MapControllers();
 

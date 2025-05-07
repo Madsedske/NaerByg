@@ -43,18 +43,26 @@ internal class Program
 
         var configuration = builder.Configuration;
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer("Bearer", options =>
+            .AddJwtBearer(options =>
             {
-                options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
+                    ValidIssuer = "bmapi",
+                    ValidateAudience = true,
+                    ValidAudience = "bmapi_clients",
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                    .GetBytes(configuration.GetSection("AppSettings")["Token"] ?? throw new InvalidOperationException("Token is not configured in AppSettings"))),
-                    ValidateAudience = false,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                        configuration.GetSection("AppSettings")["Token"]
+                        ?? throw new InvalidOperationException("Token is not configured in AppSettings")
+                    )),
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
                 };
             });
+
+
+        builder.Services.AddScoped<IAuthService, AuthService>();
 
         builder.Services.AddAuthorization(options =>
         {
@@ -76,6 +84,8 @@ internal class Program
         app.UseCors("AllowBlazorClient");
 
         app.UseHttpsRedirection();
+
+        app.UseAuthentication();
 
         app.UseAuthorization();
 
