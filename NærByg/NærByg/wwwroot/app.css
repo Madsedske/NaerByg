@@ -36,9 +36,10 @@ html, body {
     border-radius: 20px;
 }
 
-.search-box {
-    height: fit-content;
-    position: center;
+@media only screen and (max-width: 767px) {
+    .cardTitle {
+        padding-left: 10px;
+    }
 }
 
 .input-search {
@@ -52,7 +53,6 @@ html, body {
     border-radius: 25px;
     transition: all .5s ease-in-out;
     background-color: #AD9224;
-    padding-right: 30px;
     color: #242BAD;
 }
 
