@@ -23,6 +23,6 @@ public class AuthController : ControllerBase
         if (result == null)
             return Unauthorized("Invalid credentials");
 
-        return Ok(result); // will return an AuthResponse { Token, ExpiryTime }
+        return Ok(result);
     }
 }

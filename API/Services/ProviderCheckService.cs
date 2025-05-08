@@ -89,31 +89,29 @@ namespace API.Services
                 throw;
             }
         }
-         
-        public async Task<AuthResponse> LoginAsync()
+
+        public async Task<AuthResponse> LoginAsync(string username, string password)
         {
-            return await Task.FromResult(new AuthResponse
+            var authRequest = new AuthRequestBM
             {
-                Token = "j09g3j75b954hg98h549hg895h4gh8954hgej"
-            });
-            /* var authRequest = new AuthRequest
-             {
-                 APIKey = _configuration["Auth:APIKey"]
-             };
+                Username = username,
+                Password = password
+            };
 
-             var authUrl = _configuration["Auth:Url"];
+            var authUrl = _configuration["AuthBM:Url"];
 
-             var response = await _httpClient.PostAsJsonAsync(authUrl, authRequest);
+            var response = await _httpClient.PostAsJsonAsync(authUrl, authRequest);
 
-             if (response.IsSuccessStatusCode)
-             {
-                 var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>();
-                 return authResponse ?? throw new InvalidOperationException("Authentication response is null.");;
-             }
-             else
-             {
-                 throw new InvalidOperationException($"Authentication failed. StatusCode: {response.StatusCode}, Response: {await response.Content.ReadAsStringAsync()}");
-             }*/
+            if (response.IsSuccessStatusCode)
+            {
+                var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>();
+                return authResponse ?? throw new InvalidOperationException("Authentication response is null.");
+            }
+            else
+            {
+                var msg = await response.Content.ReadAsStringAsync();
+                throw new InvalidOperationException($"Authentication failed. StatusCode: {response.StatusCode}, Response: {msg}");
+            }
         }
 
         public Task<IEnumerable<ProviderProductResponse>> GetProductsData(ProviderRequest req, string token)

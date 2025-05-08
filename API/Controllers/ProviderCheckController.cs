@@ -22,10 +22,10 @@ namespace API.Controllers
         }
 
         [HttpPost("GetProviderData/{dataObject}")]
-        public async Task<IActionResult> GetProviderData([FromRoute] DataObjectType dataObject, [FromBody]ProviderRequest providerRequest)
+        public async Task<IActionResult> GetProviderData([FromRoute] DataObjectType dataObject, [FromBody]ProviderRequest providerRequest, string username, string password)
         {
             // auth
-            var authResponse = await _providerCheckService.LoginAsync();
+            var authResponse = await _providerCheckService.LoginAsync(username, password);
 
             if (authResponse == null)            
                 return BadRequest("Authentication failed");
