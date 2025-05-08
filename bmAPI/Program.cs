@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text;
 using bmAPI.Services.Helpers;
 using bmAPI.Services;
+using System.Threading.RateLimiting;
 
 internal class Program
 {
@@ -73,6 +74,20 @@ internal class Program
                 .Build());
         });
 
+        builder.Services.AddRateLimiter(options =>
+        {
+            options.AddPolicy("AuthLimiter", context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 50,
+                        Window = TimeSpan.FromMinutes(60),
+                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                        QueueLimit = 0
+                    }));
+        });
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -84,6 +99,8 @@ internal class Program
         app.UseCors("AllowBlazorClient");
 
         app.UseHttpsRedirection();
+
+        app.UseRateLimiter();
 
         app.UseAuthentication();
 

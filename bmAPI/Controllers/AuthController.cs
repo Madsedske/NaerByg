@@ -1,6 +1,7 @@
 ﻿using bmAPI.DTO;
 using bmAPI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 [ApiController]
 [Route("bm/auth")]
@@ -14,6 +15,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("token")]
+    [EnableRateLimiting("AuthLimiter")]
     public IActionResult Login([FromBody] AuthRequest request)
     {
         var result = _authService.Authenticate(request.Username, request.Password);
