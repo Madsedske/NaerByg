@@ -16,13 +16,28 @@ namespace bmAPI.Services
             _configuration = configuration;
         }
 
+        private readonly ILogger<AuthService> _logger;
+
+        public AuthService(IConfiguration configuration, ILogger<AuthService> logger)
+        {
+            _configuration = configuration;
+            _logger = logger;
+        }
+
         public AuthResponse? Authenticate(string username, string password)
         {
+            _logger.LogInformation("Authentication attempt for user: {Username}", username);
+
             var validUser = _configuration["AuthCredentials:Username"];
             var validPass = _configuration["AuthCredentials:Password"];
 
             if (username != validUser || password != validPass)
+            {
+                _logger.LogWarning("Authentication failed for user: {Username}", username);
                 return null;
+            };
+
+            _logger.LogInformation("Authentication successful for user: {Username}", username);
 
             var issuer = "bmapi";
             var audience = "bmapi_clients";
