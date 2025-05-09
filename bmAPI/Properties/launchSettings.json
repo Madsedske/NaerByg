@@ -2,23 +2,19 @@
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:22430",
-      "sslPort": 44373
-    }
+    "anonymousAuthentication": true
   },
   "profiles": {
-    "http": {
+    "API": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5217",
+      "applicationUrl": "https://bmapi.xn--nrbyg-sra.dk;http://bmapi.xn--nrbyg-sra.dk",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Production"
       }
-    },
+    } /*,
     "https": {
       "commandName": "Project",
       "dotnetRunMessages": true,
@@ -37,5 +33,6 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
+ */
   }
 }
