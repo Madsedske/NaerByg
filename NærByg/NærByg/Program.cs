@@ -8,9 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
-builder.Services.AddHttpClient<APIService>(client =>
+builder.Services.AddHttpClient<APIService>((serviceProvider, client) =>
 {
-    client.BaseAddress = new Uri("http://localhost:7045/"); // Timestamper.API base URL
+    var config = serviceProvider.GetRequiredService<IConfiguration>();
+    var apiKey = config["ApiKeys:Internal"];
+    client.DefaultRequestHeaders.Add("x-api-key", apiKey);
+
+    client.BaseAddress = new Uri("http://localhost:7045/");
 });
 
 var app = builder.Build();
