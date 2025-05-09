@@ -6,6 +6,7 @@ using System.Text;
 using bmAPI.Services.Helpers;
 using bmAPI.Services;
 using System.Threading.RateLimiting;
+using Microsoft.OpenApi.Models;
 
 internal class Program
 {
@@ -13,35 +14,38 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
+        // Logging (Console + File)
+        builder.Logging.ClearProviders();
+        builder.Logging.AddConsole();
 
+        // Add services to the container.
         builder.Services.AddControllers();
 
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        // Swagger configuration
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Byggemarked API", Version = "v1" });
+            c.UseInlineDefinitionsForEnums();
+        });
 
         // Add CORS policy
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowBlazorClient", policy =>
             {
-                policy.WithOrigins("http://localhost:5003/") // Update with your Blazor WASM app URL				 
+                policy.WithOrigins("http://localhost:5003/")
                      .AllowAnyHeader()
-                      .AllowAnyMethod()
-                      .AllowCredentials();
+                     .AllowAnyMethod()
+                     .AllowCredentials();
             });
         });
 
-        // Added builder service and configuration for databasecontext with connectionstring to the startup for better dependency injection.
-        /*var connectionString = builder.Configuration.GetConnectionString("connection");
-        builder.Services.AddDbContext<DatabaseContext>(options =>
-            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))); */// Moved connectionstring to program.cs from DbContext
-
+        // Database Context via Factory
         builder.Services.AddScoped<IDbContextFactory, DbContextFactory>();
         builder.Services.AddScoped<IDataService, DataService>();
 
-
+        // Authentication & Authorization
         var configuration = builder.Configuration;
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -90,25 +94,53 @@ internal class Program
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
-        app.UseCors("AllowBlazorClient");
-
+        // HTTPS Redirection via IIS (Simply.com)
         app.UseHttpsRedirection();
 
         app.UseRateLimiter();
 
         app.UseAuthentication();
 
+        app.UseCors("AllowBlazorClient");
+
         app.UseAuthorization();
 
-        app.MapControllers();
+        // Error Handling (Fejl logges i Console + logs/bmapi-log.txt)
+        app.UseExceptionHandler(errorApp =>
+        {
+            errorApp.Run(async context =>
+            {
+                context.Response.StatusCode = 500;
+                context.Response.ContentType = "text/plain";
 
-        //app.Run("http://localhost:5002/");
+                var error = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
+                if (error != null)
+                {
+                    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(error.Error, "Der opstod en fejl: {Message}", error.Error.Message);
+
+                    // Log til fil - opret mappe, hvis den ikke eksisterer
+                    Directory.CreateDirectory("logs");
+                    await File.AppendAllTextAsync("logs/bmapi-log.txt",
+                        $"{DateTime.UtcNow} - ERROR: {error.Error.Message}\n{error.Error.StackTrace}\n\n");
+
+                    await context.Response.WriteAsync("Der opstod en fejl. Tjek logs for mere information.");
+                }
+            });
+        });
+
+        // Swagger Setup
+        if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Byggemarked API v1");
+                c.RoutePrefix = string.Empty;
+            });
+        }
+
+        app.MapControllers();
         app.Run();
     }
 }

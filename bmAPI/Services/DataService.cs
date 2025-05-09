@@ -61,7 +61,7 @@ namespace bmAPI.Services
                 ShopId = reader.GetInt32("shop_id"),
                 ProductId = reader.GetInt32("product_id"),
                 Quantity = reader.GetInt32("quantity"),
-                Price = reader.GetDouble("category_id"),
+                Price = reader.GetDouble("price"),
                 IsActive = reader.GetString("is_active"),
                 CreatedAt = reader.GetDateTime("created_at"),
                 UpdatedAt = reader.GetDateTime("updated_at")
@@ -102,7 +102,7 @@ namespace bmAPI.Services
                 {
                     CategoryId = reader.GetInt32("category_id"),
                     Name = reader.GetString("name"),
-                    ParentId = reader.GetInt32("parent_id"),
+                    ParentId = reader.IsDBNull("parent_id") ? (int?)null : reader.GetInt32("parent_id"),
                     IsActive = reader.GetString("is_active"),
                     CreatedAt = reader.GetDateTime("created_at"),
                     UpdatedAt = reader.GetDateTime("updated_at")

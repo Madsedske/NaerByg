@@ -19,10 +19,10 @@ namespace Shared.DTOs
         public required string Name { get; set; }
 
         [JsonPropertyName("categoryId")]
-        public required string CategoryId { get; set; }
+        public required int CategoryId { get; set; }
 
         [JsonPropertyName("brandId")]
-        public required string BrandId { get; set; }
+        public required int BrandId { get; set; }
 
         [JsonPropertyName("imageURL")]
         public required string ImageURL { get; set; }

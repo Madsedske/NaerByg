@@ -17,7 +17,7 @@ namespace Shared.DTOs
         public required string PictureURL { get; set; }
         public required string ChainLogoURL { get; set; }
         public required string ShopName { get; set; }
-        public string DistanceToShop { get; set; }
+        public double DistanceToShop { get; set; }
         public required string ShopAddress { get; set; }
         public required string ShopPostArea { get; set; }
         public required string ShopCity { get; set; }
