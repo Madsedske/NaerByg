@@ -1,0 +1,99 @@
+﻿@using Shared.DTOs
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string InputAdress { get; set; }
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public ProductResponse? Product { get; set; }
+
+    private void HandleBackdropClick()
+    {
+        OnClose.InvokeAsync();
+    }
+}
+
+@if (IsVisible && Product is not null)
+{
+    <div class="overlay-backdrop" @onclick="HandleBackdropClick">
+        <div class="white-square container-fluid px-3 px-sm-4 px-md-5" @onclick:stopPropagation>
+            @ChildContent
+
+            <div class="container-fluid p-3">
+
+                <!-- Øverste række (billede + tekst) -->
+                <div class="row">
+                    <!-- Billede -->
+                    <div class="col-12 col-md-3 order-1 order-md-1 d-flex justify-content-start">
+                        <img src="@($"http://www.nærbyg.dk/product_pictures/{Product.ChainLogoURL}")" alt="Produktbillede" class="img-fluid rounded" />
+                    </div>
+
+                    <!-- Top tekst -->
+                    <div class="col-12 col-md-9 order-2 order-md-2 text-md-end text-start">
+                        <div class="row">
+                            <div class="col-sm-5 cardBodyText"><p>Afstand: @Product.DistanceToShop</p></div>
+                            <div class="col-sm-7 cardBodyText"><p>Varenr: @Product.ProductSku</p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-5 cardBodyText"><p>Pris: @Product.Price kr.</p></div>
+                            <div class="col-sm-7 cardBodyText"><p>Butik: @Product.ShopName</p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-5 cardBodyText"><p>Antal: @Product.Stock stk.</p></div>
+                            <div class="col-sm-7 cardBodyText"><p>Adresse: @Product.ShopAddress</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="my-3"></div>
+
+                <!-- Nederste række (tekst + kort) -->
+                <div class="row">
+                    <!-- Nederste tekst -->
+                    <div class="col-12 col-md-4 order-3 order-md-4 d-flex flex-column justify-content-center">
+                        <p><strong>Butik:</strong><br /> @Product.ShopName</p>
+                        <p><strong>Adresse:</strong><br /> @Product.ShopAddress, @Product.ShopPostArea @Product.ShopCity</p>
+                        <p><strong>Åbningstider:</strong><br /> @Product.ShopOpeningHours</p>
+                        <p><strong>Telefon nr.:</strong><br /> @Product.ShopPhoneNo</p>
+                    </div>
+
+                    <!-- Kort -->
+                    <div class="col-12 col-md-8 order-4 order-md-3">
+                        <div class="ratio ratio-4x3">
+                            <iframe frameborder="0"
+                                    style="border:0"
+                                    referrerpolicy="no-referrer-when-downgrade"
+                                    allowfullscreen
+                                    src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyDKO6ebfn7HyqxC20WyE16paoRSZE86fQw&origin=@Uri.EscapeDataString(InputAdress + " Denmark")&destination=@Uri.EscapeDataString(Product.ShopAddress + " " + Product.ShopPostArea + " Denmark")&avoid=tolls|highways">
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .overlay-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1050;
+    }
+
+    .white-square {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        max-width: 80vw;
+        width: 100%;
+        box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        margin: 10px;
+    }
+</style>

@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using API.Enums;
 using Microsoft.OpenApi.Any;
+using API.Services.Interfaces;
 
 internal class Program
 {
