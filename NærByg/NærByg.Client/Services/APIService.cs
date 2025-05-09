@@ -8,11 +8,11 @@ namespace NærByg.Client.Services
     public class APIService
     {
         private readonly HttpClient _httpClient;
-
+        
         public APIService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-        }
+        }   
 
         /// <summary>
         /// Sends a request to the internal product API to retrieve a list of products matching the provided search term.
@@ -42,7 +42,6 @@ namespace NærByg.Client.Services
           
             var result = await _httpClient.GetFromJsonAsync<GoogleDistanceResponse>(url);
             return result ?? throw new InvalidOperationException($"No response received from Google distance endpoint for address '{inputAddress}'");
-
         }
     }
 }
