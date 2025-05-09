@@ -17,48 +17,49 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-
         builder.Services.AddControllers();
 
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        // Swagger configuration
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>
         {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Nærbyg API", Version = "v1" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Nærbyg API", Version = "v1" });
 
-        c.UseInlineDefinitionsForEnums();
-        c.MapType<DataObjectType>(() => new OpenApiSchema
-        {
-            Type = "string",
-            Enum = Enum.GetNames(typeof(DataObjectType))
-                .Select(name => new OpenApiString(name))
-                .Cast<IOpenApiAny>()
-                .ToList()
+            c.UseInlineDefinitionsForEnums();
+            c.MapType<DataObjectType>(() => new OpenApiSchema
+            {
+                Type = "string",
+                Enum = Enum.GetNames(typeof(DataObjectType))
+                    .Select(name => new OpenApiString(name))
+                    .Cast<IOpenApiAny>()
+                    .ToList()
+            });
         });
-    });
-
 
         // Add CORS policy
-       builder.Services.AddCors(options =>
+        builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowBlazorClient", policy =>
             {
-                policy.WithOrigins("https://localhost:7252") // Update with your Blazor WASM app URL			// 5021 7252 
-                     .AllowAnyHeader()
+                policy.WithOrigins("https://localhost:7252")
+                      .AllowAnyHeader()
                       .AllowAnyMethod()
                       .AllowCredentials();
             });
         });
 
+        // Dependency Injection
         builder.Services.AddScoped<IProductService, ProductService>();
+        builder.Services.AddScoped<IProviderDispatcherService, ProviderDispatcherService>();
         builder.Services.AddHttpClient<IProviderCheckService, ProviderCheckService>();
         builder.Services.AddHttpClient<IGoogleService, GoogleService>();
 
-        // Added builder service and configuration for databasecontext with connectionstring to the startup for better dependency injection.
+        // Database Configuration
         var connectionString = builder.Configuration.GetConnectionString("connection");
         builder.Services.AddDbContext<DatabaseContext>(options =>
-            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))); // Moved connectionstring to program.cs from DbContext
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
+        // Authentication & Authorization
         var configuration = builder.Configuration;
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer("Bearer", options =>
@@ -83,23 +84,31 @@ internal class Program
                 .Build());
         });
 
+
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
-        app.UseCors("AllowBlazorClient");
-
+        // HTTP and HTTPS Redirection
         app.UseHttpsRedirection();
 
+        // Use CORS
+        app.UseCors("AllowBlazorClient");
+
+        // Use Authentication & Authorization
+        app.UseAuthentication();
         app.UseAuthorization();
 
-        app.MapControllers();
+        // Swagger Setup
+        if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nærbyg API v1");
+                c.RoutePrefix = string.Empty; // Gør Swagger tilgængelig på roden
+            });
+        }
 
-        //app.Run("http://localhost:5001/");
+        app.MapControllers();
         app.Run();
     }
 }
