@@ -4,6 +4,6 @@ namespace bmAPI.Services
 {
     public interface IAuthService
     {
-      // Task<AuthResponse> Authenticate(AuthRequest authReq);
+        AuthResponse? Authenticate(string username, string password);
     }
 }

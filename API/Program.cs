@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using API.Enums;
 using Microsoft.OpenApi.Any;
 using API.Services.Interfaces;
+using NaerByg.Api.Middleware;
 
 internal class Program
 {
@@ -23,7 +24,7 @@ internal class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Nærbyg API", Version = "v1" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "NÃ¦rbyg API", Version = "v1" });
 
             c.UseInlineDefinitionsForEnums();
             c.MapType<DataObjectType>(() => new OpenApiSchema
@@ -97,14 +98,15 @@ internal class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
+        app.UseMiddleware<ApiKeyMiddleware>();
         // Swagger Setup
         if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
         {
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nærbyg API v1");
-                c.RoutePrefix = string.Empty; // Gør Swagger tilgængelig på roden
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "NÃ¦rbyg API v1");
+                c.RoutePrefix = string.Empty; // GÃ¸r Swagger tilgÃ¦ngelig pÃ¥ roden
             });
         }
 

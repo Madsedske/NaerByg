@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Text;
 using bmAPI.Services.Helpers;
 using bmAPI.Services;
+using System.Threading.RateLimiting;
 using Microsoft.OpenApi.Models;
-
 
 internal class Program
 {
@@ -48,18 +48,26 @@ internal class Program
         // Authentication & Authorization
         var configuration = builder.Configuration;
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer("Bearer", options =>
+            .AddJwtBearer(options =>
             {
-                options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
+                    ValidIssuer = "bmapi",
+                    ValidateAudience = true,
+                    ValidAudience = "bmapi_clients",
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                    .GetBytes(configuration.GetSection("AppSettings")["Token"] ?? throw new InvalidOperationException("Token is not configured in AppSettings"))),
-                    ValidateAudience = false,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                        configuration.GetSection("AppSettings")["Token"]
+                        ?? throw new InvalidOperationException("Token is not configured in AppSettings")
+                    )),
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
                 };
             });
+
+
+        builder.Services.AddScoped<IAuthService, AuthService>();
 
         builder.Services.AddAuthorization(options =>
         {
@@ -70,14 +78,31 @@ internal class Program
                 .Build());
         });
 
+        builder.Services.AddRateLimiter(options =>
+        {
+            options.AddPolicy("AuthLimiter", context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 50,
+                        Window = TimeSpan.FromMinutes(60),
+                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                        QueueLimit = 0
+                    }));
+        });
+
         var app = builder.Build();
 
         // HTTPS Redirection via IIS (Simply.com)
         app.UseHttpsRedirection();
 
-        app.UseCors("AllowBlazorClient");
+        app.UseRateLimiter();
 
         app.UseAuthentication();
+
+        app.UseCors("AllowBlazorClient");
+
         app.UseAuthorization();
 
         // Error Handling (Fejl logges i Console + logs/bmapi-log.txt)

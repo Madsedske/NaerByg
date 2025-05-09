@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using bmAPI.DTO;
 using bmAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace bmAPI.Controllers
 {
     [Route("bm/[controller]")]
     [ApiController]
+    [Authorize]
     public class DataController : ControllerBase
     {
         private readonly IDataService _dataService;
