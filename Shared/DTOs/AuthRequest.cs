@@ -8,6 +8,8 @@ namespace Shared.DTOs
 {
     public class AuthRequest
     {
-        public required string APIKey { get; set; }
+        public required string Username { get; set; }
+        public required string Password { get; set; }
+
     }
 }

@@ -92,13 +92,13 @@ namespace API.Services
 
         public async Task<AuthResponse> LoginAsync(string username, string password)
         {
-            var authRequest = new AuthRequestBM
+            var authRequest = new AuthRequest
             {
                 Username = username,
                 Password = password
             };
 
-            var authUrl = _configuration["AuthBM:Url"];
+            var authUrl = _configuration["Auth:Url"];
 
             var response = await _httpClient.PostAsJsonAsync(authUrl, authRequest);
 
@@ -122,30 +122,25 @@ namespace API.Services
         public Task<IEnumerable<BrandResponse>> GetBrandsData(ProviderRequest req, string token)
         {
             return FetchFromProvider< IEnumerable<BrandResponse>>(req, token, DataObjectType.Brand);
-
         }
 
         public Task<IEnumerable<CategoryResponse>> GetCategoriesData(ProviderRequest req, string token)
         {
             return FetchFromProvider< IEnumerable<CategoryResponse>>(req, token, DataObjectType.Category);
-
         }
 
         public Task<IEnumerable<PostAreaResponse>> GetPostAreasData(ProviderRequest req, string token)
         {
             return FetchFromProvider<IEnumerable<PostAreaResponse>>(req, token, DataObjectType.PostArea);
-
         }
 
         public Task<IEnumerable<ShopResponse>> GetShopsData(ProviderRequest req, string token)
         {
             return FetchFromProvider< IEnumerable<ShopResponse>>(req, token, DataObjectType.Shop);
-
         }
         public Task<IEnumerable<MtmShopProductResponse>> GetMtmShopProductsData(ProviderRequest req, string token)
         {
             return FetchFromProvider< IEnumerable<MtmShopProductResponse>>(req, token, DataObjectType.MtmShopProduct);
-
         }
     }
 }
