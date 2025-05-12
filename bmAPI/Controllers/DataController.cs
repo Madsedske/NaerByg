@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using bmAPI.DTO;
-using bmAPI.Services;
 using Microsoft.AspNetCore.Authorization;
+using bmAPI.Services.Interfaces;
 
 namespace bmAPI.Controllers
 {

@@ -1,7 +1,7 @@
 ﻿using bmAPI.DTO;
 using bmAPI.Enums;
 using bmAPI.Extensions;
-using bmAPI.Services.Helpers;
+using bmAPI.Services.Interfaces;
 using MySqlConnector;
 using System.Data;
 using System.Reflection.PortableExecutable;

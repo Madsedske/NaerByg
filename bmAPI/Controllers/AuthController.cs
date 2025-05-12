@@ -1,5 +1,5 @@
 ﻿using bmAPI.DTO;
-using bmAPI.Services;
+using bmAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
