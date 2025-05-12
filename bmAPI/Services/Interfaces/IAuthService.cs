@@ -1,6 +1,6 @@
 ﻿using bmAPI.DTO;
 
-namespace bmAPI.Services
+namespace bmAPI.Services.Interfaces
 {
     public interface IAuthService
     {

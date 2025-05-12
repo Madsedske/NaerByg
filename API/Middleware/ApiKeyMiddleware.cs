@@ -24,7 +24,8 @@ namespace NaerByg.Api.Middleware
         }
 
         public async Task InvokeAsync(HttpContext context)
-        {// Bypass API key check for Swagger UI and related endpoints
+        {
+            // Bypass API key check for Swagger UI and related endpoints
             var path = context.Request.Path.Value?.ToLower();
 
             if (path != null && (
