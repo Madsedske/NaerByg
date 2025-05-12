@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using API.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace API.Services.Helpers
@@ -17,6 +18,9 @@ namespace API.Services.Helpers
         {
 
         }
+
+        public DbSet<ApiSyncLog> ApiSyncLog { get; set; }
+
 
         /// <summary>
         /// Returns the underlying database connection as an <see cref="IDbConnection"/>.
@@ -37,5 +41,17 @@ namespace API.Services.Helpers
                 throw new InvalidOperationException("Database connection is not configured.");
             }
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Konfiguration af ApiSyncLog tabellen
+            modelBuilder.Entity<ApiSyncLog>(entity =>
+            {
+                entity.HasKey(e => e.ApiSyncLogId);
+                entity.Property(e => e.DataObject).HasMaxLength(100).IsRequired();
+                entity.Property(e => e.Status).HasMaxLength(50).IsRequired();
+            });
+        }
+
     }
 }

@@ -3,8 +3,10 @@ using API.Services;
 using API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using MySqlConnector;
 using Shared.DTOs;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.Xml;
 
 namespace API.Controllers
 {
@@ -14,30 +16,45 @@ namespace API.Controllers
     {
         private readonly IProviderCheckService _providerCheckService;
         private readonly IProviderDispatcherService _providerDispatcherService;
+        private readonly ISyncService _syncService;
 
-        public ProviderCheckController(IProviderCheckService ProviderCheckService, IProviderDispatcherService ProviderDispatcherService)
+        public ProviderCheckController(IProviderCheckService ProviderCheckService, IProviderDispatcherService ProviderDispatcherService, ISyncService SyncService)
         {
             _providerDispatcherService = ProviderDispatcherService;
             _providerCheckService = ProviderCheckService;
+            _syncService = SyncService;
         }
 
-        [HttpPost("GetProviderData/{dataObject}")]
-        public async Task<IActionResult> GetProviderData([FromRoute] DataObjectType dataObject, [FromBody]ProviderRequest providerRequest, string username, string password)
+        [HttpGet("GetProviderData/{chainId}")]
+        public async Task<IActionResult> GetProviderData(int chainId)
         {
-            // auth
-            var authResponse = await _providerCheckService.LoginAsync(username, password);
+            try
+            {
+                var username = Environment.GetEnvironmentVariable("var_username");
+                var password = Environment.GetEnvironmentVariable("var_password");
 
-            if (authResponse == null)            
-                return BadRequest("Authentication failed");
-            
-            // Get data endpoints
-            var data = await _providerDispatcherService.GetDataAsync(dataObject, providerRequest, authResponse.Token);
+                if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                {
+                    await _syncService.LogSync(chainId, null, "error", "Credentials not found");
+                    return BadRequest("Credentials not found");
+                }
 
-            if (data == null)
-                return BadRequest($"Failed to fetch data for {dataObject}");
+                var authResponse = await _providerCheckService.LoginAsync(username, password);
+                if (authResponse == null)
+                {
+                    await _syncService.LogSync(chainId, null, "error", "Authentication failed");
+                    return Unauthorized("Authentication failed");
+                }
 
-            return Ok(data);
-       
+                await _syncService.SyncProviderData(chainId, authResponse.Token);
+                return Ok("Data sync completed.");
+            }
+            catch (Exception ex)
+            {
+                await _syncService.LogSync(chainId, null, "error", $"Unexpected error: {ex.Message}");
+                return StatusCode(500, $"Unexpected error: {ex.Message}");
+            }
         }
+
     }
 }
