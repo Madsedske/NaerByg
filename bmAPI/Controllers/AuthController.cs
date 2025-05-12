@@ -14,7 +14,7 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
-    [HttpPost("login")]
+    [HttpPost("signin")]
     [EnableRateLimiting("AuthLimiter")]
     public IActionResult Login([FromBody] AuthRequest request)
     {
