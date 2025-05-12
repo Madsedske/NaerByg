@@ -25,6 +25,21 @@ namespace NaerByg.Api.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
+            // Bypass API key check for Swagger UI and related endpoints
+            var path = context.Request.Path.Value?.ToLower();
+
+            if (path != null && (
+                path.StartsWith("/swagger") ||
+                path.StartsWith("/favicon") ||
+                path.StartsWith("/index.html") || // optional if root redirects
+                path.StartsWith("/_framework")    // Blazor support files
+            ))
+            {
+                await _next(context);
+                return;
+            }
+
+
             if (!context.Request.Headers.TryGetValue(APIKEY_HEADER_NAME, out var extractedApiKey))
             {
                 _logger.LogWarning("Request missing API key. Path: {Path}", context.Request.Path);

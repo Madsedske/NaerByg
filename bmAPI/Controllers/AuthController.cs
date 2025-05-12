@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
 [ApiController]
-[Route("bm/auth")]
+[Route("bm/[controller]")]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
@@ -14,7 +14,7 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
-    [HttpPost("token")]
+    [HttpPost("login")]
     [EnableRateLimiting("AuthLimiter")]
     public IActionResult Login([FromBody] AuthRequest request)
     {
