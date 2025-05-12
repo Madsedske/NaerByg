@@ -86,6 +86,13 @@ internal class Program
         });
 
 
+        builder.Services.AddHttpClient(); // already used for services, safe to add again if not present
+
+        builder.Services.AddHostedService<ProviderSyncJob1>();
+        builder.Services.AddHostedService<ProviderSyncJob2>();
+        builder.Services.AddHostedService<ProviderSyncJob3>();
+
+
         var app = builder.Build();
 
         // HTTP and HTTPS Redirection
