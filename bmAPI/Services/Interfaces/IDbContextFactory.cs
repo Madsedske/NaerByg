@@ -1,6 +1,6 @@
 ﻿using bmAPI.Services.Helpers;
 
-namespace bmAPI.Services.Helpers
+namespace bmAPI.Services.Interfaces
 {
     public interface IDbContextFactory
     {
