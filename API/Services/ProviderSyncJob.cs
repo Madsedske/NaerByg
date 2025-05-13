@@ -1,34 +1,39 @@
-﻿public class ProviderSyncJob1 : BackgroundService
+﻿using API.Services.Helpers;
+
+public class ProviderSyncJob : BackgroundService
 {
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly ILogger<ProviderSyncJob1> _logger;
+    private readonly ILogger<ProviderSyncJob> _logger;
     private readonly IConfiguration _configuration;
+    private readonly ProviderSyncConfig _config;
 
-    public ProviderSyncJob1(
+    public ProviderSyncJob(
         IHttpClientFactory httpClientFactory,
-        ILogger<ProviderSyncJob1> logger,
-        IConfiguration configuration)
+        ILogger<ProviderSyncJob> logger,
+        IConfiguration configuration,
+        ProviderSyncConfig config)
     {
         _httpClientFactory = httpClientFactory;
         _logger = logger;
         _configuration = configuration;
+        _config = config;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("ProviderSyncJob1 started.");
+        _logger.LogInformation("Starting ProviderSyncJob for ChainId {ChainId} after {Delay} min.",
+            _config.ChainId, _config.InitialDelay.TotalMinutes);
 
-        await Task.Delay(TimeSpan.FromMinutes(0), stoppingToken);
+        await Task.Delay(_config.InitialDelay, stoppingToken);
 
         while (!stoppingToken.IsCancellationRequested)
         {
             try
             {
                 var apiKey = _configuration["Auth:APIKey"];
-                var chainId = 1;
+                var chainId = _config.ChainId;
 
                 var client = _httpClientFactory.CreateClient();
-
                 var request = new HttpRequestMessage(
                     HttpMethod.Post,
                     $"https://xn--nrbyg-sra.dk/api/ProviderCheck/GetProviderData?chainId={chainId}");
@@ -40,16 +45,17 @@
 
                 if (response.IsSuccessStatusCode)
                 {
-                    _logger.LogInformation("ProviderSyncJob1 succeeded: {Content}", responseContent);
+                    _logger.LogInformation("Sync for ChainId {ChainId} succeeded: {Content}", chainId, responseContent);
                 }
                 else
                 {
-                    _logger.LogWarning("ProviderSyncJob1 failed with status {StatusCode}: {Content}", response.StatusCode, responseContent);
+                    _logger.LogWarning("Sync for ChainId {ChainId} failed ({StatusCode}): {Content}",
+                        chainId, response.StatusCode, responseContent);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "ProviderSyncJob1 encountered an error.");
+                _logger.LogError(ex, "Error during ProviderSyncJob for ChainId {ChainId}", _config.ChainId);
             }
 
             await Task.Delay(TimeSpan.FromMinutes(30), stoppingToken);
