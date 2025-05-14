@@ -1,4 +1,4 @@
-@bmAPI_HostAddress = http://localhost:5217
+@bmAPI_HostAddress = https://bmapi.xn--nrbyg-sra.dk
 
 GET {{bmAPI_HostAddress}}/weatherforecast/
 Accept: application/json

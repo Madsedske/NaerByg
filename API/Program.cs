@@ -10,6 +10,9 @@ using API.Enums;
 using Microsoft.OpenApi.Any;
 using API.Services.Interfaces;
 using NaerByg.Api.Middleware;
+using Microsoft.AspNetCore.DataProtection;
+using System.IO;
+
 
 internal class Program
 {
@@ -19,6 +22,12 @@ internal class Program
 
         // Add services to the container.
         builder.Services.AddControllers();
+
+        // Data Protection Configuration
+        builder.Services.AddDataProtection()
+            .PersistKeysToFileSystem(new DirectoryInfo(@"d:\web\localuser\naerbyg.dk\public_html\dataprotection_keys"))
+            .SetApplicationName("NærByg")
+            .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
 
         // Swagger configuration
         builder.Services.AddEndpointsApiExplorer();
@@ -42,16 +51,16 @@ internal class Program
         {
             options.AddPolicy("AllowBlazorClient", policy =>
             {
-                policy.WithOrigins("https://localhost:7252")
-                      .AllowAnyHeader()
-                      .AllowAnyMethod()
-                      .AllowCredentials();
+                policy.AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
             });
         });
 
         // Dependency Injection
         builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddScoped<IProviderDispatcherService, ProviderDispatcherService>();
+        builder.Services.AddScoped<ISyncService, SyncService>();
         builder.Services.AddHttpClient<IProviderCheckService, ProviderCheckService>();
         builder.Services.AddHttpClient<IGoogleService, GoogleService>();
 
@@ -66,13 +75,15 @@ internal class Program
             .AddJwtBearer("Bearer", options =>
             {
                 options.SaveToken = true;
+                options.RequireHttpsMetadata = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateIssuerSigningKey = true,
+                    ValidateAudience = false,
+                    ValidIssuer = configuration["AppSettings:Issuer"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
                     .GetBytes(configuration.GetSection("AppSettings")["Token"] ?? throw new InvalidOperationException("Token is not configured in AppSettings"))),
-                    ValidateAudience = false,
                 };
             });
 
@@ -85,18 +96,20 @@ internal class Program
                 .Build());
         });
 
+        builder.Services.AddHttpClient();
 
-        builder.Services.AddHttpClient(); // already used for services, safe to add again if not present
-
+        // Background Jobs (Hosted Services)
         builder.Services.AddHostedService<ProviderSyncJob1>();
         builder.Services.AddHostedService<ProviderSyncJob2>();
         builder.Services.AddHostedService<ProviderSyncJob3>();
 
-
         var app = builder.Build();
 
         // HTTP and HTTPS Redirection
-        app.UseHttpsRedirection();
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseHttpsRedirection();
+        }
 
         // Use CORS
         app.UseCors("AllowBlazorClient");
@@ -105,7 +118,10 @@ internal class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
+        // API Key Middleware (for securing endpoints)
         app.UseMiddleware<ApiKeyMiddleware>();
+
+
         // Swagger Setup
         if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
         {
@@ -113,7 +129,7 @@ internal class Program
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nærbyg API v1");
-                c.RoutePrefix = string.Empty; // Gør Swagger tilgængelig på roden
+                c.RoutePrefix = string.Empty;
             });
         }
 

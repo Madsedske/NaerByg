@@ -2,7 +2,7 @@
 {
     public class AuthRequest
     {
-        public string Username { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
+        public string U { get; set; } = string.Empty;
+        public string P { get; set; } = string.Empty;
     }
 }

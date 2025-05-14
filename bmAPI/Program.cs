@@ -15,11 +15,12 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+
         // Logging (Console + File)
         builder.Logging.ClearProviders();
         builder.Logging.AddConsole();
 
-        // Add services to the container.
+        // Add services to the container
         builder.Services.AddControllers();
 
         // Swagger configuration
@@ -33,12 +34,11 @@ internal class Program
         // Add CORS policy
         builder.Services.AddCors(options =>
         {
-            options.AddPolicy("AllowBlazorClient", policy =>
+            options.AddPolicy("AllowAll", policy =>
             {
-                policy.WithOrigins("http://localhost:5003/")
-                     .AllowAnyHeader()
-                     .AllowAnyMethod()
-                     .AllowCredentials();
+                policy.AllowAnyOrigin()
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
             });
         });
 
@@ -48,25 +48,25 @@ internal class Program
 
         // Authentication & Authorization
         var configuration = builder.Configuration;
+        var tokenKey = builder.Configuration["AppSettings:Token"];
+        var issuer = builder.Configuration["AppSettings:Issuer"];
+        var audience = builder.Configuration["AppSettings:Audience"];
+
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
+                options.RequireHttpsMetadata = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = true,
-                    ValidIssuer = "bmapi",
-                    ValidateAudience = true,
-                    ValidAudience = "bmapi_clients",
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                        configuration.GetSection("AppSettings")["Token"]
-                        ?? throw new InvalidOperationException("Token is not configured in AppSettings")
-                    )),
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
+                    ValidateIssuer = true,
+                    ValidIssuer = issuer,
+                    ValidateAudience = true,
+                    ValidAudience = audience,
+                    ValidateLifetime = true
                 };
             });
-
 
         builder.Services.AddScoped<IAuthService, AuthService>();
 
@@ -79,7 +79,7 @@ internal class Program
                 .Build());
         });
 
-        builder.Services.AddRateLimiter(options =>
+       /* builder.Services.AddRateLimiter(options =>
         {
             options.AddPolicy("AuthLimiter", context =>
                 RateLimitPartition.GetFixedWindowLimiter(
@@ -91,18 +91,15 @@ internal class Program
                         QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                         QueueLimit = 0
                     }));
-        });
+        });*/
 
         var app = builder.Build();
 
-        // HTTPS Redirection via IIS (Simply.com)
-        app.UseHttpsRedirection();
-
-        app.UseRateLimiter();
+       // app.UseRateLimiter();
 
         app.UseAuthentication();
 
-        app.UseCors("AllowBlazorClient");
+        app.UseCors("AllowAll");
 
         app.UseAuthorization();
 

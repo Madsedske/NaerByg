@@ -10,6 +10,8 @@ using System.Text.RegularExpressions;
 using API.Enums;
 using API.Models;
 using Shared.DTOs;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using MySqlConnector;
 
 public class SyncService : ISyncService
 {
@@ -28,8 +30,6 @@ public class SyncService : ISyncService
         // Looping through all data objects except null
         foreach (DataObjectType dataObject in Enum.GetValues(typeof(DataObjectType)))
         {
-            if (dataObject == null) continue; // Ignorerer null (sikkerhed)
-
             try
             {
                 DateTime lastSynced = await GetLastSynced(chainId, dataObject);
@@ -73,14 +73,23 @@ public class SyncService : ISyncService
     {
         try
         {
-            var commandText = $"CALL GetData_{procedureName}(@chainId, @data);";
-            return await _databaseContext.Database.ExecuteSqlRawAsync(commandText, new object[] { chainId, providerData.ToString() });
+            var json = System.Text.Json.JsonSerializer.Serialize(providerData);
+
+            var sql = $"CALL GetData_{procedureName}(@chainId, @jsonData)";
+            var parameters = new[]
+            {
+            new MySqlParameter("@chainId", chainId),
+            new MySqlParameter("@jsonData", json)
+        };
+
+            return await _databaseContext.Database.ExecuteSqlRawAsync(sql, parameters);
         }
         catch (Exception ex)
         {
             throw new Exception($"Fejl ved databaseopdatering ({procedureName}): {ex.Message}");
         }
     }
+
 
     // Logs the sync status to the database
     public async Task LogSync(int chainId, string dataObject, string status, string message)

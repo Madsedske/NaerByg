@@ -31,9 +31,10 @@
 
                 var request = new HttpRequestMessage(
                     HttpMethod.Post,
-                    $"https://xn--nrbyg-sra.dk/api/ProviderCheck/GetProviderData?chainId={chainId}");
+                    $"https://nbapi.xn--nrbyg-sra.dk/api/ProviderCheck/GetProviderData?chainId={chainId}");
 
                 request.Headers.Add("x-api-key", apiKey);
+
 
                 var response = await client.SendAsync(request, stoppingToken);
                 var responseContent = await response.Content.ReadAsStringAsync(stoppingToken);

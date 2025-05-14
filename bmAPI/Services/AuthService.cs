@@ -11,12 +11,6 @@ namespace bmAPI.Services
     public class AuthService : IAuthService
     {
         private readonly IConfiguration _configuration;
-
-        public AuthService(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
         private readonly ILogger<AuthService> _logger;
 
         public AuthService(IConfiguration configuration, ILogger<AuthService> logger)
@@ -25,29 +19,29 @@ namespace bmAPI.Services
             _logger = logger;
         }
 
-        public AuthResponse? Authenticate(string username, string password)
+        public AuthResponse? Authenticate(string u, string p)
         {
-            _logger.LogInformation("Authentication attempt for user: {Username}", username);
+            _logger.LogInformation("Authentication attempt for user: {U}", u);
 
-            var validUser = _configuration["AuthCredentials:Username"];
-            var validPass = _configuration["AuthCredentials:Password"];
+            var validUser = Environment.GetEnvironmentVariable("var_username");
+            var validPass = Environment.GetEnvironmentVariable("var_password");
 
-            if (username != validUser || password != validPass)
+            if (u != validUser || p != validPass)
             {
-                _logger.LogWarning("Authentication failed for user: {Username}", username);
+                _logger.LogWarning("Authentication failed for user: {U}", u);
                 return null;
             };
 
-            _logger.LogInformation("Authentication successful for user: {Username}", username);
+            _logger.LogInformation("Authentication successful for user: {U}", u);
 
-            var issuer = "bmapi";
-            var audience = "bmapi_clients";
+            var issuer = _configuration["AppSettings:Issuer"];
+            var audience = _configuration["AppSettings:Audience"];
             var key = _configuration["AppSettings:Token"]!;
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, username),
+                new Claim(JwtRegisteredClaimNames.Sub, u),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
