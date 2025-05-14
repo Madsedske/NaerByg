@@ -98,10 +98,30 @@ internal class Program
 
         builder.Services.AddHttpClient();
 
-        // Background Jobs (Hosted Services)
-        builder.Services.AddHostedService<ProviderSyncJob1>();
-        builder.Services.AddHostedService<ProviderSyncJob2>();
-        builder.Services.AddHostedService<ProviderSyncJob3>();
+        // Register 3 scheduled jobs with different parameters
+        builder.Services.AddSingleton<IHostedService>(sp =>
+            new ProviderSyncJob(
+                sp.GetRequiredService<IHttpClientFactory>(),
+                sp.GetRequiredService<ILogger<ProviderSyncJob>>(),
+                sp.GetRequiredService<IConfiguration>(),
+                new ProviderSyncConfig { ChainId = 1, InitialDelay = TimeSpan.FromMinutes(0) }
+            ));
+
+        builder.Services.AddSingleton<IHostedService>(sp =>
+            new ProviderSyncJob(
+                sp.GetRequiredService<IHttpClientFactory>(),
+                sp.GetRequiredService<ILogger<ProviderSyncJob>>(),
+                sp.GetRequiredService<IConfiguration>(),
+                new ProviderSyncConfig { ChainId = 2, InitialDelay = TimeSpan.FromMinutes(10) }
+            ));
+
+        builder.Services.AddSingleton<IHostedService>(sp =>
+            new ProviderSyncJob(
+                sp.GetRequiredService<IHttpClientFactory>(),
+                sp.GetRequiredService<ILogger<ProviderSyncJob>>(),
+                sp.GetRequiredService<IConfiguration>(),
+                new ProviderSyncConfig { ChainId = 3, InitialDelay = TimeSpan.FromMinutes(20) }
+            ));
 
         var app = builder.Build();
 

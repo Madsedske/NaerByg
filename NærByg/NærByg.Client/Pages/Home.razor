@@ -70,7 +70,7 @@
                         <div class="cardProductList" @onclick="() => ShowOverlay(product)">
                             <div class="row">
                                 <div class="col-md-4 d-flex align-items-center justify-content-center">
-                                    <img src="@($"http://www.nærbyg.dk/product_pictures/{product.PictureURL}")" class="productImg" alt="...">
+                                    <img src="@($"https://www.nærbyg.dk/product_pictures/{product.PictureURL}")" class="productImg" alt="...">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="row">
@@ -157,7 +157,8 @@
 
     private ProductRequest _ProductsRequest = new ProductRequest
         {
-            SearchTerm = string.Empty
+            SearchTerm = string.Empty,
+            Category = null
         };
 
     private async Task HandleKeyPress(KeyboardEventArgs e)
@@ -176,7 +177,8 @@
         {
             var request = new ProductRequest
                 {
-                    SearchTerm = SearchItemInput
+                    SearchTerm = SearchItemInput,
+                    Category = null
                 };
 
             List<ProductResponse> productsResponse = await APIService.GetProductsFromSearched(request);
@@ -287,4 +289,4 @@
             kmRadiusValue = Convert.ToString(kmRadiusDisplay);
         }
     }
-} https://www.google.com/maps/embed/v1/directions?key=AIzaSyDKO6ebfn7HyqxC20WyE16paoRSZE86fQw&origin=AdresseInput%20Denmark&destination=Teglovnsvej%2039%204100%20Denmark&avoid=tolls|highways
+}

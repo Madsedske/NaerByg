@@ -16,53 +16,8 @@ namespace API.Services
             _databaseContext = databaseContext;
         }
 
-        public List<ProductResponse> GetProducts(string searchTerm)
+        public List<ProductResponse> GetProducts(string searchTerm, int category)
         {
-            /* var products = new List<ProductResponse>();
-
-              ProductResponse productsResponse = new ProductResponse
-              {
-                  ProductId = 1,
-                  ProductSku = "hg738h34h439f34",
-                  ProductName = "Møtrækker",
-                  Brand = "BOSCH",
-                  Price = 453.4,
-                  Stock = 3,
-                  PictureURL = "staerk/bahco/10.jpg",
-                  ChainLogoURL = "/fjeife/fejifje/jie.png",
-                  ShopName = "Stærk",
-                  ShopAddress = "Toften 7",
-                  ShopPostArea = "4100",
-                  ShopCity = "Ringsted",
-                  ShopPhoneNo = "69696969",
-                  ShopOpeningHours = "Man: 09:00-18:00"
-              };
-
-              products.Add(productsResponse);
-
-              ProductResponse productResponse = new ProductResponse
-              {
-                  ProductId = 2,
-                  ProductSku = "hg7g433g348ggh34gf34",
-                  ProductName = "Monteringshammer",
-                  Brand = "Bacho",
-                  Price = 14233.4,
-                  Stock = 12,
-                  PictureURL = "harrag_nybold/bahco/11.jpg",
-                  ChainLogoURL = "/fjeifje/jie.png",
-                  ShopName = "Harrag Nybold",
-                  ShopAddress = "Teglovnsvej 39",
-                  ShopPostArea = "4100",
-                  ShopCity = "Ringsted",
-                  ShopPhoneNo = "12345678",
-                  ShopOpeningHours = "tirsd: 09:00-18:00"
-              };
-
-              products.Add(productResponse);
-
-              return products;
-            */
-
             var products = new List<ProductResponse>();
 
             using var connection = _databaseContext.CreateConnection();
@@ -70,35 +25,41 @@ namespace API.Services
             {
                 CommandType = CommandType.StoredProcedure
             };
+                    // Add parameter to avoid SQL injection
+                    command.Parameters.AddWithValue("@search_term", searchTerm);
+                    command.Parameters.AddWithValue("@sys_category_mapping_id", category);
 
-            command.Parameters.AddWithValue("@search_term", searchTerm);
-
-            connection.Open();
-            using var reader = command.ExecuteReader();
-
-            while (reader.Read())
-            {
-                products.Add(new ProductResponse
-                {
-                    ProductId = reader.GetInt32("ProductId"),
-                    ProductSku = reader.GetString("ProductSku"),
-                    ProductName = reader.GetString("ProductName"),
-                    Brand = reader.GetString("Brand"),
-                    Price = reader.GetDouble("Price"),
-                    Stock = reader.GetInt32("Stock"),
-                    PictureURL = reader.GetString("PictureURL"),
-                    ChainLogoURL = reader.GetString("ChainLogoURL"),
-                    ShopName = reader.GetString("ShopName"),
-                    ShopAddress = reader.GetString("ShopAddress"),
-                    ShopPostArea = reader.GetString("ShopPostArea"),
-                    ShopCity = reader.GetString("ShopCity"),
-                    ShopPhoneNo = reader.GetString("ShopPhoneNo"),
-                    ShopOpeningHours = reader.GetString("ShopOpeningHours")
-                });
+                    // Execute the query
+                    using (var reader = command.ExecuteReader())
+                    {
+                        // Read the results and populate the buttons list
+                        while (reader.Read())
+                        {
+                            ProductResponse productsResponse = new ProductResponse
+                            {
+                                ProductId = reader.GetInt32("ProductId"),
+                                ProductSku = reader.GetString("ProductSku"),
+                                ProductName = reader.GetString("ProductName"),
+                                Brand = reader.GetString("Brand"),
+                                Price = reader.GetDouble("Price"),
+                                Stock = reader.GetInt32("Stock"),
+                                PictureURL = reader.GetString("PictureURL"),
+                                ChainLogoURL = reader.GetString("ChainLogoURL"),
+                                ShopName = reader.GetString("ShopName"),
+                                ShopAddress = reader.GetString("ShopAddress"),
+                                ShopPostArea = reader.GetString("ShopPostArea"),
+                                ShopCity = reader.GetString("ShopCity"),
+                                ShopPhoneNo = reader.GetString("ShopPhoneNo"),
+                                ShopOpeningHours = reader.GetString("ShopOpeningHours")
+                            };
+                            products.Add(productsResponse);
+                        }
+                    }
+                    // Close the connection
+                    connection.Close();
+                }
+                return products;
             }
-
-            return products;
-        
         }
     } 
 }
