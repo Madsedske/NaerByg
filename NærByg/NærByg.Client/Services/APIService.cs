@@ -22,7 +22,7 @@ namespace NærByg.Client.Services
         /// <exception cref="InvalidOperationException">Thrown if the API response is null, indicating a potential API issue.</exception>
         public async Task<List<ProductResponse>> GetProductsFromSearched(ProductRequest productsRequest)
         {
-            var response = await _httpClient.GetFromJsonAsync<List<ProductResponse>>($"api/Product/GetProducts/{productsRequest.SearchTerm}");
+            var response = await _httpClient.GetFromJsonAsync<List<ProductResponse>>($"api/Product/GetProducts?searchTerm={productsRequest.SearchTerm}&category={productsRequest.Category}");
 
             return response ?? new List<ProductResponse>();
         }

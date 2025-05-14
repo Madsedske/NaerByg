@@ -16,10 +16,10 @@ namespace API.Services
             _databaseContext = databaseContext;
         }
 
-        public List<ProductResponse> GetProducts(string searchTerm)
+        public List<ProductResponse> GetProducts(string searchTerm, int category)
         {
-            var products = new List<ProductResponse>();
-
+           /* var products = new List<ProductResponse>();
+           
             ProductResponse productsResponse = new ProductResponse
             {
                 ProductId = 1,
@@ -61,9 +61,9 @@ namespace API.Services
             products.Add(productResponse);
 
             return products;
-
-            /*
-            var products = new List<ProductsResponse>();
+           */
+            
+            var products = new List<ProductResponse>();
 
             using (var connection = _databaseContext.CreateConnection())
             {
@@ -82,6 +82,7 @@ namespace API.Services
 
                     // Add parameter to avoid SQL injection
                     command.Parameters.AddWithValue("@search_term", searchTerm);
+                    command.Parameters.AddWithValue("@sys_category_mapping_id", category);
 
                     // Execute the query
                     using (var reader = command.ExecuteReader())
@@ -89,7 +90,7 @@ namespace API.Services
                         // Read the results and populate the buttons list
                         while (reader.Read())
                         {
-                            ProductsResponse productsResponse = new ProductsResponse
+                            ProductResponse productsResponse = new ProductResponse
                             {
                                 ProductId = reader.GetInt32("ProductId"),
                                 ProductSku = reader.GetString("ProductSku"),
@@ -112,7 +113,8 @@ namespace API.Services
                     // Close the connection
                     connection.Close();
                 }
-                return products;*/
+                return products;
+            }
         }
     }
 }

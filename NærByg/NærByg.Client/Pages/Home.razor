@@ -157,7 +157,8 @@
 
     private ProductRequest _ProductsRequest = new ProductRequest
         {
-            SearchTerm = string.Empty
+            SearchTerm = string.Empty,
+            Category = null
         };
 
     private async Task HandleKeyPress(KeyboardEventArgs e)
@@ -176,7 +177,8 @@
         {
             var request = new ProductRequest
                 {
-                    SearchTerm = SearchItemInput
+                    SearchTerm = SearchItemInput,
+                    Category = null
                 };
 
             List<ProductResponse> productsResponse = await APIService.GetProductsFromSearched(request);
