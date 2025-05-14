@@ -11,12 +11,6 @@ namespace bmAPI.Services
     public class AuthService : IAuthService
     {
         private readonly IConfiguration _configuration;
-
-        public AuthService(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
         private readonly ILogger<AuthService> _logger;
 
         public AuthService(IConfiguration configuration, ILogger<AuthService> logger)

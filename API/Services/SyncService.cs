@@ -28,7 +28,7 @@ public class SyncService : ISyncService
         // Looping through all data objects except null
         foreach (DataObjectType dataObject in Enum.GetValues(typeof(DataObjectType)))
         {
-            if (dataObject == null) continue; // Ignorerer null (sikkerhed)
+            if (dataObject == null) continue; // Ignore null (Security)
 
             try
             {
