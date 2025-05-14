@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "NærByg.Client": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:53481;http://localhost:53482"
+    }
+  }
+}

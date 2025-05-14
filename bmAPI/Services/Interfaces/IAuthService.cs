@@ -4,6 +4,6 @@ namespace bmAPI.Services.Interfaces
 {
     public interface IAuthService
     {
-        AuthResponse? Authenticate(string username, string password);
+        AuthResponse? Authenticate(string u, string p);
     }
 }

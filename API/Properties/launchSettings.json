@@ -12,7 +12,9 @@
       "launchUrl": "swagger",
       "applicationUrl": "https://nbapi.xn--nrbyg-sra.dk;http://nbapi.xn--nrbyg-sra.dk",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Production"
+        "ASPNETCORE_ENVIRONMENT": "Production",
+        "var_username": "naerbyg",
+        "var_password": "E31E36C63655DDB4"
       }
     }/*,
     "https": {

@@ -47,9 +47,16 @@ namespace API.Services.Helpers
             // Konfiguration af ApiSyncLog tabellen
             modelBuilder.Entity<ApiSyncLog>(entity =>
             {
+                entity.ToTable("api_sync_log");
                 entity.HasKey(e => e.ApiSyncLogId);
                 entity.Property(e => e.DataObject).HasMaxLength(100).IsRequired();
                 entity.Property(e => e.Status).HasMaxLength(50).IsRequired();
+                entity.Property(e => e.ApiSyncLogId).HasColumnName("api_sync_log_id");
+                entity.Property(e => e.ChainId).HasColumnName("chain_id");
+                entity.Property(e => e.DataObject).HasColumnName("data_object").HasMaxLength(100);
+                entity.Property(e => e.Status).HasColumnName("status").HasMaxLength(50);
+                entity.Property(e => e.Message).HasColumnName("message");
+                entity.Property(e => e.SyncedAt).HasColumnName("synced_at");
             });
         }
 

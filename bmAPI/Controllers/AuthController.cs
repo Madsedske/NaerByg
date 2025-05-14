@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
 [ApiController]
-[Route("bm/[controller]")]
+[Route("api")]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
@@ -14,11 +14,20 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
-    [HttpPost("signin")]
-    [EnableRateLimiting("AuthLimiter")]
-    public IActionResult Login([FromBody] AuthRequest request)
+    [HttpGet("envtest")]
+    public IActionResult EnvTest()
     {
-        var result = _authService.Authenticate(request.Username, request.Password);
+        return Ok(new
+        {
+            User = Environment.GetEnvironmentVariable("var_username"),
+            Pass = Environment.GetEnvironmentVariable("var_password")
+        });
+    }
+
+    [HttpPost("banana")]
+    public IActionResult Login([FromForm] string u, [FromForm] string p)
+    {
+        var result = _authService.Authenticate(u, p);
 
         if (result == null)
             return Unauthorized("Invalid credentials");

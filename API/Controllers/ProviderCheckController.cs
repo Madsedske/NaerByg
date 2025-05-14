@@ -25,21 +25,21 @@ namespace API.Controllers
             _syncService = SyncService;
         }
 
-        [HttpGet("GetProviderData/{chainId}")]
-        public async Task<IActionResult> GetProviderData(int chainId)
+        [HttpPost("GetProviderData")]
+        public async Task<IActionResult> GetProviderData([FromQuery] int chainId)
         {
             try
             {
-                var username = Environment.GetEnvironmentVariable("var_username");
-                var password = Environment.GetEnvironmentVariable("var_password");
+                var u = Environment.GetEnvironmentVariable("var_username");
+                var p = Environment.GetEnvironmentVariable("var_password");
 
-                if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                if (string.IsNullOrEmpty(u) || string.IsNullOrEmpty(p))
                 {
                     await _syncService.LogSync(chainId, null, "error", "Credentials not found");
                     return BadRequest("Credentials not found");
                 }
 
-                var authResponse = await _providerCheckService.LoginAsync(username, password);
+                var authResponse = await _providerCheckService.LoginAsync(u, p);
                 if (authResponse == null)
                 {
                     await _syncService.LogSync(chainId, null, "error", "Authentication failed");

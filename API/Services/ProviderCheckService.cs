@@ -7,6 +7,7 @@ using Shared.DTOs;
 using System.Data;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 
 namespace API.Services
@@ -52,6 +53,11 @@ namespace API.Services
             if (string.IsNullOrWhiteSpace(value))
                 throw new InvalidOperationException($"Missing or empty configuration value for '{key}'");
 
+            if (!Uri.IsWellFormedUriString(value, UriKind.Absolute))
+                throw new InvalidOperationException($"Configuration value for '{key}' is not a valid absolute URI: {value}");
+
+            Console.WriteLine($"[CONFIG] {key} = {value}");
+
             return value;
         }
 
@@ -60,28 +66,47 @@ namespace API.Services
             var url = GetUrlFor(type);
             Console.WriteLine($"[API] Fetching from: {url}");
 
+            var content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
+
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, url)
             {
-                Content = JsonContent.Create(request)
+                Content = content
             };
             httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var response = await _httpClient.SendAsync(httpRequest);
+            // Log request body
+            Console.WriteLine($"[API] Sending request body: {JsonSerializer.Serialize(request)}");
 
+            // Log headers
+            Console.WriteLine("[API] Request headers:");
+            foreach (var header in httpRequest.Headers)
+            {
+                Console.WriteLine($"[API]   {header.Key}: {string.Join(", ", header.Value)}");
+            }
+
+            if (httpRequest.Content?.Headers != null)
+            {
+                foreach (var header in httpRequest.Content.Headers)
+                {
+                    Console.WriteLine($"[API]   {header.Key}: {string.Join(", ", header.Value)}");
+                }
+            }
+
+            var response = await _httpClient.SendAsync(httpRequest);
             Console.WriteLine($"[API] StatusCode: {response.StatusCode}");
-            
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"[API] Response body: {responseBody}");
+
             if (!response.IsSuccessStatusCode)
             {
-                Console.WriteLine($"[API] Request failed. StatusCode: {response.StatusCode}, Response: {await response.Content.ReadAsStringAsync()} ");
-                throw new HttpRequestException($"Failed to fetch data. Status: {response.StatusCode}");
+                throw new HttpRequestException($"Failed to fetch data. Status: {response.StatusCode}, Body: {responseBody}");
             }
-            var responseBody = await response.Content.ReadAsStringAsync();
+
             try
             {
-
                 var result = JsonSerializer.Deserialize<TResponse>(responseBody);
                 return result ?? throw new JsonException("Deserialized response is null.");
-
             }
             catch (JsonException ex)
             {
@@ -90,29 +115,40 @@ namespace API.Services
             }
         }
 
-        public async Task<AuthResponse> LoginAsync(string username, string password)
+
+
+        public async Task<AuthResponse> LoginAsync(string u, string p)
         {
-            var authRequest = new AuthRequest
+            var requestUrl = "https://bmapi.xn--nrbyg-sra.dk/api/banana";
+
+            var content = new FormUrlEncodedContent(new[]
             {
-                Username = username,
-                Password = password
-            };
+                 new KeyValuePair<string, string>("u", u),
+                 new KeyValuePair<string, string>("p", p)
+            });
 
-            var authUrl = _configuration["Auth:Url"];
+            var response = await _httpClient.PostAsync(requestUrl, content);
 
-            var response = await _httpClient.PostAsJsonAsync(authUrl, authRequest);
+            if (!response.IsSuccessStatusCode)
+                return null;
 
-            if (response.IsSuccessStatusCode)
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            try
             {
-                var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>();
-                return authResponse ?? throw new InvalidOperationException("Authentication response is null.");
+                return JsonSerializer.Deserialize<AuthResponse>(responseBody, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
             }
-            else
+            catch
             {
-                var msg = await response.Content.ReadAsStringAsync();
-                throw new InvalidOperationException($"Authentication failed. StatusCode: {response.StatusCode}, Response: {msg}");
+                return null;
             }
+
+
         }
+
 
         public Task<IEnumerable<ProviderProductResponse>> GetProductsData(ProviderRequest req, string token)
         {
@@ -121,12 +157,12 @@ namespace API.Services
 
         public Task<IEnumerable<BrandResponse>> GetBrandsData(ProviderRequest req, string token)
         {
-            return FetchFromProvider< IEnumerable<BrandResponse>>(req, token, DataObjectType.Brand);
+            return FetchFromProvider<IEnumerable<BrandResponse>>(req, token, DataObjectType.Brand);
         }
 
         public Task<IEnumerable<CategoryResponse>> GetCategoriesData(ProviderRequest req, string token)
         {
-            return FetchFromProvider< IEnumerable<CategoryResponse>>(req, token, DataObjectType.Category);
+            return FetchFromProvider<IEnumerable<CategoryResponse>>(req, token, DataObjectType.Category);
         }
 
         public Task<IEnumerable<PostAreaResponse>> GetPostAreasData(ProviderRequest req, string token)
@@ -136,11 +172,11 @@ namespace API.Services
 
         public Task<IEnumerable<ShopResponse>> GetShopsData(ProviderRequest req, string token)
         {
-            return FetchFromProvider< IEnumerable<ShopResponse>>(req, token, DataObjectType.Shop);
+            return FetchFromProvider<IEnumerable<ShopResponse>>(req, token, DataObjectType.Shop);
         }
         public Task<IEnumerable<MtmShopProductResponse>> GetMtmShopProductsData(ProviderRequest req, string token)
         {
-            return FetchFromProvider< IEnumerable<MtmShopProductResponse>>(req, token, DataObjectType.MtmShopProduct);
+            return FetchFromProvider<IEnumerable<MtmShopProductResponse>>(req, token, DataObjectType.MtmShopProduct);
         }
     }
 }
