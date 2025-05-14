@@ -25,42 +25,57 @@ namespace NaerByg.Api.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-            // Bypass API key check for Swagger UI and related endpoints
-            var path = context.Request.Path.Value?.ToLower();
-
-            if (path != null && (
-                path.StartsWith("/swagger") ||
-                path.StartsWith("/favicon") ||
-                path.StartsWith("/index.html") || // optional if root redirects
-                path.StartsWith("/_framework")    // Blazor support files
-            ))
+            try
             {
+                var path = context.Request.Path.Value?.ToLower();
+
+                if (path != null && (
+                    path.StartsWith("/swagger") ||
+                    path.StartsWith("/favicon") ||
+                    path.StartsWith("/index.html") ||
+                    path.StartsWith("/_framework")
+                ))
+                {
+                    await _next(context);
+                    return;
+                }
+
+                if (!context.Request.Headers.TryGetValue(APIKEY_HEADER_NAME, out var extractedApiKey))
+                {
+                    _logger.LogWarning("Request missing API key. Path: {Path}", context.Request.Path);
+                    context.Response.StatusCode = 401;
+                    await context.Response.WriteAsync("API Key was not provided.");
+                    return;
+                }
+
+                var expectedApiKey = _configuration.GetValue<string>("Auth:APIKey");
+
+                if (string.IsNullOrEmpty(expectedApiKey))
+                {
+                    _logger.LogError("API key is not configured in appsettings.");
+                    context.Response.StatusCode = 500;
+                    await context.Response.WriteAsync("Server misconfiguration.");
+                    return;
+                }
+
+                if (!expectedApiKey.Equals(extractedApiKey))
+                {
+                    _logger.LogWarning("Invalid API key used. Path: {Path}", context.Request.Path);
+                    context.Response.StatusCode = 403;
+                    await context.Response.WriteAsync("Unauthorized client.");
+                    return;
+                }
+
+                _logger.LogInformation("API key validated for path: {Path}", context.Request.Path);
                 await _next(context);
-                return;
             }
-
-
-            if (!context.Request.Headers.TryGetValue(APIKEY_HEADER_NAME, out var extractedApiKey))
+            catch (Exception ex)
             {
-                _logger.LogWarning("Request missing API key. Path: {Path}", context.Request.Path);
-                context.Response.StatusCode = 401;
-                await context.Response.WriteAsync("API Key was not provided.");
-                return;
+                _logger.LogError(ex, "Unhandled exception in ApiKeyMiddleware for path: {Path}", context.Request.Path);
+                context.Response.StatusCode = 500;
+                await context.Response.WriteAsync("Internal server error in API key validation.");
             }
-
-            var expectedApiKey = _configuration.GetValue<string>("Auth:APIKey");
-
-            if (!expectedApiKey.Equals(extractedApiKey))
-            {
-                _logger.LogWarning("Invalid API key used. Path: {Path}", context.Request.Path);
-                context.Response.StatusCode = 403;
-                await context.Response.WriteAsync("Unauthorized client.");
-                return;
-            }
-
-            _logger.LogInformation("API key validated for path: {Path}", context.Request.Path);
-
-            await _next(context);
         }
+
     }
 }
