@@ -3,8 +3,11 @@
 @using NærByg.Client.Services
 @using Shared.DTOs
 @using System.Globalization
+@using Microsoft.AspNetCore.WebUtilities
 @inject APIService APIService
 @inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+@implements IDisposable
 
 <PageTitle>Hjem</PageTitle>
 
@@ -20,10 +23,10 @@
     <!-- Container with the input fields, button and range slider -->
     <div class="container">
         <div class="row">
-            <div class="col-12 mt-5 myBorder">
+            <div class="col-12 mt-5">
                 <div class="row">
                     <div class="col-12">
-                        <div class="search-box">
+                        <div class="search-wrapper">
                             <input type="text" class="input-search mx-auto w-100" @bind-value="SearchItemInput" @bind-value:event="oninput" @onkeydown="HandleKeyPress" placeholder="Søg efter et produkt..">
                             <button @onclick="SearchItem" class="btn-search"><i class="fas fa-search"></i></button>
                         </div>
@@ -65,6 +68,9 @@
                 <!-- Loop through items -->
                 @if (ProductListTrue)
                 {
+                    <div>
+                        <p>Du har søgt på "@SearchedItemLabel"</p>
+                    </div>
                     @foreach (var product in ProductListItems)
                     {
                         <div class="cardProductList" @onclick="() => ShowOverlay(product)">
@@ -136,9 +142,6 @@
     }
 </script>
 
-<!-- Routes map API key: AIzaSyDKO6ebfn7HyqxC20WyE16paoRSZE86fQw
-     Distance Matrix API key: AIzaSyBmuwpJh08co2X-MsuBZvUMNvh-zCp_t2E
--->
 @code {
     private bool RemoveAfterSearch { get; set; } = true;
     private bool ProductListTrue { get; set; } = false;
@@ -152,6 +155,9 @@
     private string AdresseInput { get; set; } = string.Empty;
     private string kmRadiusValue { get; set; } = "50";
     private string DistanceToShop { get; set; } = string.Empty;
+    private int? SelectedCategoryId { get; set; }
+    private string? SelectedCategoryName { get; set; }
+    private string SearchedItemLabel { get; set; } = string.Empty;
 
     private List<ProductResponse> ProductListItems { get; set; } = new List<ProductResponse>();
 
@@ -160,6 +166,17 @@
             SearchTerm = string.Empty,
             Category = null
         };
+
+    protected override void OnInitialized()
+    {
+        Navigation.LocationChanged += HandleLocationChanged;
+        ReadQuery();
+    }
+
+    private void HandleLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        ReadQuery();
+    }
 
     private async Task HandleKeyPress(KeyboardEventArgs e)
     {
@@ -178,7 +195,7 @@
             var request = new ProductRequest
                 {
                     SearchTerm = SearchItemInput,
-                    Category = null
+                    Category = SelectedCategoryId
                 };
 
             List<ProductResponse> productsResponse = await APIService.GetProductsFromSearched(request);
@@ -191,6 +208,10 @@
 
                 FilterAndOrder(ProductListItems);
 
+                if (SearchItemInput is null)
+                    SearchedItemLabel = SelectedCategoryName;
+                else
+                    SearchedItemLabel = SearchItemInput;
 
                 RemoveAfterSearch = false;
                 ProductListTrue = true;
@@ -288,5 +309,25 @@
 
             kmRadiusValue = Convert.ToString(kmRadiusDisplay);
         }
+    }
+
+    private void ReadQuery()
+    {
+        var uri = new Uri(Navigation.Uri);
+        var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+
+        if (query.TryGetValue("category", out var categoryValue) && int.TryParse(categoryValue, out var catId))
+        {
+            SelectedCategoryId = catId;
+            SelectedCategoryName = query.TryGetValue("name", out var nameVal) ? nameVal.ToString() : "";
+
+            Console.WriteLine($"Kategori valgt: {SelectedCategoryId} - {SelectedCategoryName}");
+            _ = SearchItem();
+        }
+    }
+
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= HandleLocationChanged;
     }
 }
