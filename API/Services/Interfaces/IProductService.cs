@@ -4,6 +4,6 @@ namespace API.Services.Interfaces
 {
     public interface IProductService
     {
-        List<ProductResponse> GetProducts(string seachTerm, int category);
+        List<ProductResponse> GetProducts(ProductRequest request);
     }
 }
