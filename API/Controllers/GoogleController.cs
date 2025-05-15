@@ -25,13 +25,13 @@ namespace API.Controllers
         /// </summary>
         /// <param name="inputAddress">Address provided by the user.</param>
         /// <param name="shopAddress">The shop address.</param>
-        /// <param name="postarea">Postal area to include in the calculation context.</param>
+        /// <param name="shopPostArea">Postal area to include in the calculation context.</param>
         /// <returns>
         /// An <see cref="ActionResult{GoogleDistanceResponse}"/> containing distance and duration details if successful,
         /// or a BadRequest result if the calculation fails.
         /// </returns>
         [HttpGet("calculate")]
-        public async Task<ActionResult<GoogleDistanceResponse>> GetCalculatedDistance(string? inputAddress, string shopAddress, int postarea)
+        public async Task<ActionResult<GoogleDistanceResponse>> GetCalculatedDistance(string? inputAddress, string shopAddress, int shopPostArea)
         {
 
             if (string.IsNullOrWhiteSpace(inputAddress))
@@ -64,7 +64,7 @@ namespace API.Controllers
                     }
                 });
             }
-            var data = await _googleService.CalculateDistance(inputAddress, shopAddress, postarea);
+            var data = await _googleService.CalculateDistance(inputAddress, shopAddress, shopPostArea);
 
             if (data == null)
                 return BadRequest($"Failed to fetch data");
