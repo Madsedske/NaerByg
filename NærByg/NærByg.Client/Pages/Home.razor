@@ -82,7 +82,7 @@
                                     </div>
                                     <div class="cardBody">
                                         <div class="row">
-                                            <div class="col-sm-5 cardBodyText"><p>Afstand: @(product.DistanceToShop > 0 ? $"{product.DistanceToShop} km" : "--")</p>></div>
+                                            <div class="col-sm-5 cardBodyText"><p>Afstand: @(product.DistanceToShop > 0 ? $"{product.DistanceToShop} km" : "--")</p></div>
                                             <div class="col-sm-7 cardBodyText"><p>Varenr: @product.ProductSku</p></div>
                                         </div>
                                         <div class="row">
@@ -91,7 +91,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-5 cardBodyText"><p>Antal: @product.Stock stk.</p></div>
-                                            <div class="col-sm-7 cardBodyText"><p>Adresse: @product.ShopAddress</p></div>
+                                            <div class="col-sm-7 cardBodyText"><p>Adresse: @product.ShopAddress, @product.ShopPostArea @product.ShopCity</p></div>
                                         </div>
                                     </div>
                                 </div>
