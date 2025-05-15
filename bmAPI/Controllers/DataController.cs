@@ -43,7 +43,7 @@ namespace bmAPI.Controllers
         {
             Console.WriteLine($"[bmAPI] /postArea called with chainId={request.ChainId}, lastSynced={request.LastSynced}");
             List<PostAreaResponse> postAreas = _dataService.ReturnPostAreas(request.ChainId, request.LastSynced);
-            Console.WriteLine($"[bmAPI] Returning {postAreas.Count} categories");
+            Console.WriteLine($"[bmAPI] Returning {postAreas.Count} post areas");
             return Ok(postAreas);
         }
 
@@ -52,7 +52,7 @@ namespace bmAPI.Controllers
         {
             Console.WriteLine($"[bmAPI] /products called with chainId={request.ChainId}, lastSynced={request.LastSynced}");
             List<ProductResponse> products = _dataService.ReturnProducts(request.ChainId, request.LastSynced);
-            Console.WriteLine($"[bmAPI] Returning {products.Count} categories");
+            Console.WriteLine($"[bmAPI] Returning {products.Count} products");
             return Ok(products);
         }
 
@@ -61,7 +61,7 @@ namespace bmAPI.Controllers
         {
             Console.WriteLine($"[bmAPI] /shops called with chainId={request.ChainId}, lastSynced={request.LastSynced}");
             List<ShopResponse> shops = _dataService.ReturnShops(request.ChainId, request.LastSynced);
-            Console.WriteLine($"[bmAPI] Returning {shops.Count} categories");
+            Console.WriteLine($"[bmAPI] Returning {shops.Count} shops");
             return Ok(shops);
         }
 
@@ -70,7 +70,7 @@ namespace bmAPI.Controllers
         {
             Console.WriteLine($"[bmAPI] /shopProducts called with chainId={request.ChainId}, lastSynced={request.LastSynced}");
             List<MtmShopProductResponse> shopProducts = _dataService.ReturnShopProducts(request.ChainId, request.LastSynced);
-            Console.WriteLine($"[bmAPI] Returning {shopProducts.Count} categories");
+            Console.WriteLine($"[bmAPI] Returning {shopProducts.Count} shop products");
             return Ok(shopProducts);
         }
     }
