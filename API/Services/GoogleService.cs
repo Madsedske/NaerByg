@@ -13,11 +13,11 @@ namespace API.Services
             _httpClient = httpClient;
         }
 
-        public async Task<GoogleDistanceResponse> CalculateDistance(string inputAddress, string shopAddress, int postarea)
+        public async Task<GoogleDistanceResponse> CalculateDistance(string inputAddress, string shopAddress, int shopPostArea)
         {
 
             var url = $"https://maps.googleapis.com/maps/api/distancematrix/json?" +
-                     $"destinations={Uri.EscapeDataString(shopAddress + ", " + postarea)}&" +
+                     $"destinations={Uri.EscapeDataString(shopAddress + ", " + shopPostArea)}&" +
                      $"origins={Uri.EscapeDataString(inputAddress)}&" +
                      $"units=metric&" +
                      $"key=AIzaSyBmuwpJh08co2X-MsuBZvUMNvh-zCp_t2E";
