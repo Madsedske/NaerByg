@@ -6,7 +6,7 @@
     <div class="container-fluid">
 
         <img src="/resources/Logo_kopi.png" alt="Logo" width="60" height="60" class="rounded-pill mx-auto d-block">
-       
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -19,14 +19,14 @@
                         Byggematerialer
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Befæstelse</a></li>
-                        <li><a class="dropdown-item" href="#">Gulv, loft & vægge</a></li>
-                        <li><a class="dropdown-item" href="#">Døre & vinduer</a></li>
-                        <li><a class="dropdown-item" href="#">Byggeplader</a></li>
-                        <li><a class="dropdown-item" href="#">Træ & brædder</a></li>
-                        <li><a class="dropdown-item" href="#">Konstruktion</a></li>
-                        <li><a class="dropdown-item" href="#">Tag</a></li>
-                        <li><a class="dropdown-item" href="#">Stiger & stilladser</a></li>
+                        @foreach (var item in byggematerialerItems)
+                        {
+                            <li>
+                                <a class="dropdown-item" href="#" @onclick="() => NavigateToCategory(item)">
+                                    @item.CategoryName
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </li>
                 <!-- Haven kategori -->
@@ -35,16 +35,14 @@
                         Haven
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Hegn</a></li>
-                        <li><a class="dropdown-item" href="#">Havemøbler</a></li>
-                        <li><a class="dropdown-item" href="#">Haveredskaber</a></li>
-                        <li><a class="dropdown-item" href="#">Havemaskiner</a></li>
-                        <li><a class="dropdown-item" href="#">Havebygninger</a></li>
-                        <li><a class="dropdown-item" href="#">Haveindretning</a></li>
-                        <li><a class="dropdown-item" href="#">Grill</a></li>
-                        <li><a class="dropdown-item" href="#">Vanding</a></li>
-                        <li><a class="dropdown-item" href="#">Beplantning</a></li>
-                        <li><a class="dropdown-item" href="#">Skadedyr & ukrudt</a></li>
+                        @foreach (var item in havenItems)
+                        {
+                            <li>
+                                <a class="dropdown-item" href="#" @onclick="() => NavigateToCategory(item)">
+                                    @item.CategoryName
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </li>
                 <!-- Huset kategori -->
@@ -53,14 +51,14 @@
                         Huset
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Husholdning</a></li>
-                        <li><a class="dropdown-item" href="#">Indretning</a></li>
-                        <li><a class="dropdown-item" href="#">Hylder & ophæng</a></li>
-                        <li><a class="dropdown-item" href="#">Flytning & opbevaring</a></li>
-                        <li><a class="dropdown-item" href="#">Alarmer & sikkerhed</a></li>
-                        <li><a class="dropdown-item" href="#">Borde</a></li>
-                        <li><a class="dropdown-item" href="#">Postkasser & standere</a></li>
-                        <li><a class="dropdown-item" href="#">Mosteri & syltning</a></li>                        
+                        @foreach (var item in husetItems)
+                        {
+                            <li>
+                                <a class="dropdown-item" href="#" @onclick="() => NavigateToCategory(item)">
+                                    @item.CategoryName
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </li>
                 <!-- VVS kategori -->
@@ -69,13 +67,14 @@
                         VVS
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Toilet</a></li>
-                        <li><a class="dropdown-item" href="#">Vandhaner & armatur</a></li>
-                        <li><a class="dropdown-item" href="#">Vaske</a></li>
-                        <li><a class="dropdown-item" href="#">Varme & ventilation</a></li>
-                        <li><a class="dropdown-item" href="#">Afløb & kloak</a></li>
-                        <li><a class="dropdown-item" href="#">Rør & fittings</a></li>
-                        <li><a class="dropdown-item" href="#">Vandbehandling</a></li>
+                        @foreach (var item in vvsItems)
+                        {
+                            <li>
+                                <a class="dropdown-item" href="#" @onclick="() => NavigateToCategory(item)">
+                                    @item.CategoryName
+                                </a>
+                            </li>
+                        }                      
                     </ul>
                 </li>
                 <!-- EL & belysning kategori -->
@@ -84,14 +83,14 @@
                         EL & belysning
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Indendørsbelysning</a></li>
-                        <li><a class="dropdown-item" href="#">Udendørsbelysning</a></li>
-                        <li><a class="dropdown-item" href="#">Lyskilder</a></li>
-                        <li><a class="dropdown-item" href="#">Smart home</a></li>
-                        <li><a class="dropdown-item" href="#">Dørklokker</a></li>
-                        <li><a class="dropdown-item" href="#">Arbejdsbelysning</a></li>
-                        <li><a class="dropdown-item" href="#">Antenne, Data & TV</a></li>
-                        <li><a class="dropdown-item" href="#">Batterier</a></li>
+                        @foreach (var item in elBelysningItems)
+                        {
+                            <li>
+                                <a class="dropdown-item" href="#" @onclick="() => NavigateToCategory(item)">
+                                    @item.CategoryName
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </li>
                 <!-- Maling & kemi kategori -->
@@ -100,13 +99,14 @@
                         Maling & kemi
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Udendørsmaling</a></li>
-                        <li><a class="dropdown-item" href="#">Indendørsmaling</a></li>
-                        <li><a class="dropdown-item" href="#">Malerudstyr</a></li>
-                        <li><a class="dropdown-item" href="#">Rengøring & kemikalier</a></li>
-                        <li><a class="dropdown-item" href="#">Spartel- & fugemasse</a></li>
-                        <li><a class="dropdown-item" href="#">Lim</a></li>
-                        <li><a class="dropdown-item" href="#">Vægbeklædning</a></li>
+                        @foreach (var item in malingKemiItems)
+                        {
+                            <li>
+                                <a class="dropdown-item" href="#" @onclick="() => NavigateToCategory(item)">
+                                    @item.CategoryName
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </li>
                 <!-- Værktøj kategori -->
@@ -115,12 +115,14 @@
                         Værktøj
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Elværktøj</a></li>
-                        <li><a class="dropdown-item" href="#">Håndværktøj</a></li>
-                        <li><a class="dropdown-item" href="#">Opbevaring af vørktøj</a></li>
-                        <li><a class="dropdown-item" href="#">Øvrige maskiner</a></li>
-                        <li><a class="dropdown-item" href="#">Skovredskaber</a></li>
-                        <li><a class="dropdown-item" href="#">Baljer & Spande</a></li>
+                        @foreach (var item in værktøjItems)
+                        {
+                            <li>
+                                <a class="dropdown-item" href="#" @onclick="() => NavigateToCategory(item)">
+                                    @item.CategoryName
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </li>
                 <!-- Bil & fritid kategori -->
@@ -129,21 +131,119 @@
                         Bil & fritid
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Autoudstyr</a></li>
-                        <li><a class="dropdown-item" href="#">Cykeludstyr</a></li>
-                        <li><a class="dropdown-item" href="#">Camping</a></li>
-                        <li><a class="dropdown-item" href="#">Dyreartikler</a></li>
-                        <li><a class="dropdown-item" href="#">Elektronik</a></li>
-                        <li><a class="dropdown-item" href="#">Leg & underholdning</a></li>
-                        <li><a class="dropdown-item" href="#">Sport & fritid</a></li>
-                        <li><a class="dropdown-item" href="#">Tøj & sko</a></li>
+                        @foreach (var item in bilFritidItems)
+                        {
+                            <li>
+                                <a class="dropdown-item" href="#" @onclick="() => NavigateToCategory(item)">
+                                    @item.CategoryName
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </li>
-            </ul>           
+            </ul>
         </div>
     </div>
 </nav>
 
 @code {
+    public class CategoryItem
+    {
+        public int CategoryId { get; set; }
+        public string CategoryName { get; set; }
+    }
 
+    private void NavigateToCategory(CategoryItem item)
+    {
+        Navigation.NavigateTo($"/?category={item.CategoryId}&name={Uri.EscapeDataString(item.CategoryName)}");
+    }
+
+    private List<CategoryItem> bilFritidItems = new()
+    {
+        new() { CategoryId = 5, CategoryName = "Autoudstyr" },
+        new() { CategoryId = 5, CategoryName = "Cykeludstyr" },
+        new() { CategoryId = 5, CategoryName = "Camping" },
+        new() { CategoryId = 5, CategoryName = "Dyreartikler" },
+        new() { CategoryId = 5, CategoryName = "Elektronik" },
+        new() { CategoryId = 5, CategoryName = "Leg & underholdning" },
+        new() { CategoryId = 5, CategoryName = "Sport & fritid" },
+        new() { CategoryId = 5, CategoryName = "Tøj & sko" }
+    };
+    private List<CategoryItem> værktøjItems = new()
+    {
+        new() { CategoryId = 5, CategoryName = "Elværktøj" },
+        new() { CategoryId = 5, CategoryName = "Håndværktøj" },
+        new() { CategoryId = 5, CategoryName = "Opbevaring af vørktøj" },
+        new() { CategoryId = 5, CategoryName = "Øvrige maskiner" },
+        new() { CategoryId = 5, CategoryName = "Øvrige maskiner" },
+        new() { CategoryId = 5, CategoryName = "Skovredskaber" },
+        new() { CategoryId = 5, CategoryName = "Baljer & Spande" }
+    };
+    private List<CategoryItem> malingKemiItems = new()
+    {
+        new() { CategoryId = 5, CategoryName = "Udendørsmaling" },
+        new() { CategoryId = 5, CategoryName = "Indendørsmaling" },
+        new() { CategoryId = 5, CategoryName = "Malerudstyr" },
+        new() { CategoryId = 5, CategoryName = "Rengøring & kemikalier" },
+        new() { CategoryId = 5, CategoryName = "Spartel- & fugemasse" },
+        new() { CategoryId = 5, CategoryName = "Lim" },
+        new() { CategoryId = 5, CategoryName = "Vægbeklædning" }
+    };
+    private List<CategoryItem> elBelysningItems = new()
+    {
+        new() { CategoryId = 5, CategoryName = "Indendørsbelysning" },
+        new() { CategoryId = 5, CategoryName = "Udendørsbelysning" },
+        new() { CategoryId = 5, CategoryName = "Lyskilder" },
+        new() { CategoryId = 5, CategoryName = "Smart home" },
+        new() { CategoryId = 5, CategoryName = "Dørklokker" },
+        new() { CategoryId = 5, CategoryName = "Arbejdsbelysning" },
+        new() { CategoryId = 5, CategoryName = "Antenne, Data & TV" },
+        new() { CategoryId = 5, CategoryName = "Batterier" }
+    };
+    private List<CategoryItem> vvsItems = new()
+    {
+        new() { CategoryId = 5, CategoryName = "Toilet" },
+        new() { CategoryId = 5, CategoryName = "Vandhaner & armatur" },
+        new() { CategoryId = 5, CategoryName = "Vaske" },
+        new() { CategoryId = 5, CategoryName = "Varme & ventilation" },
+        new() { CategoryId = 5, CategoryName = "Varme & ventilation" },
+        new() { CategoryId = 5, CategoryName = "Afløb & kloak" },
+        new() { CategoryId = 5, CategoryName = "Rør & fittings" },
+        new() { CategoryId = 5, CategoryName = "Vandbehandling" }
+    };
+    private List<CategoryItem> husetItems = new()
+    {
+        new() { CategoryId = 5, CategoryName = "Husholdning" },
+        new() { CategoryId = 5, CategoryName = "Indretning" },
+        new() { CategoryId = 5, CategoryName = "Hylder & ophæng" },
+        new() { CategoryId = 5, CategoryName = "Flytning & opbevaring" },
+        new() { CategoryId = 5, CategoryName = "Alarmer & sikkerhed" },
+        new() { CategoryId = 5, CategoryName = "Borde" },
+        new() { CategoryId = 5, CategoryName = "Postkasser & standere" },
+        new() { CategoryId = 5, CategoryName = "Mosteri & syltning" }
+    };
+    private List<CategoryItem> havenItems = new()
+    {
+        new() { CategoryId = 5, CategoryName = "Hegn" },
+        new() { CategoryId = 5, CategoryName = "Havemøbler" },
+        new() { CategoryId = 5, CategoryName = "Haveredskaber" },
+        new() { CategoryId = 5, CategoryName = "Havemaskiner" },
+        new() { CategoryId = 5, CategoryName = "Havebygninger" },
+        new() { CategoryId = 5, CategoryName = "Haveindretning" },
+        new() { CategoryId = 5, CategoryName = "Grill" },
+        new() { CategoryId = 5, CategoryName = "Vanding" },
+         new() { CategoryId = 5, CategoryName = "Beplantning" },
+        new() { CategoryId = 5, CategoryName = "Skadedyr & ukrudt" }
+    };
+    private List<CategoryItem> byggematerialerItems = new()
+    {
+        new() { CategoryId = 5, CategoryName = "Befæstelse" },
+        new() { CategoryId = 5, CategoryName = "Gulv, loft & vægge" },
+        new() { CategoryId = 5, CategoryName = "Døre & vinduer" },
+        new() { CategoryId = 5, CategoryName = "Byggeplader" },
+        new() { CategoryId = 5, CategoryName = "Træ & brædder" },
+        new() { CategoryId = 5, CategoryName = "Konstruktion" },
+        new() { CategoryId = 5, CategoryName = "Tag" },
+        new() { CategoryId = 5, CategoryName = "Stiger & stilladser" }
+    };
 }

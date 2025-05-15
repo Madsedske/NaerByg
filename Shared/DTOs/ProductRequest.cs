@@ -8,7 +8,7 @@ namespace Shared.DTOs
 {
     public class ProductRequest
     {
-        public required string SearchTerm { get; set; }
-        public required int Category { get; set; }
+        public string? SearchTerm { get; set; }
+        public int? Category { get; set; }
     }
 }

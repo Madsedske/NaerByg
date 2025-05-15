@@ -24,6 +24,7 @@ namespace API.Services
             using var connection = _databaseContext.CreateConnection();
             {
                 connection.Open();
+
                 using var command = new MySqlCommand("GetProducts", (MySqlConnection)connection)
                 {
                     CommandType = CommandType.StoredProcedure
@@ -65,6 +66,3 @@ namespace API.Services
         }
     }
 } 
-
-
-

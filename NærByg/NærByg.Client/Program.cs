@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using NærByg.Client.Services;
+using NÃ¦rByg.Client.Services;
 
 internal class Program
 {
