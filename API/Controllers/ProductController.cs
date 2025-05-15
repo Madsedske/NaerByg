@@ -27,13 +27,12 @@ namespace API.Controllers
         /// or an HTTP 404 Not Found if no products are found.
         /// </returns>
         [HttpGet("GetProducts")]
-        public IActionResult GetProducts(string searchTerm, int category)
-        {
-            
-            List<ProductResponse> products = _productService.GetProducts(searchTerm, category);
+        public IActionResult GetProducts([FromBody] ProductRequest request)
+        {            
+            List<ProductResponse> products = _productService.GetProducts(request);
 
             if (products == null || products.Count == 0)
-                return NotFound($"No products found matching: {searchTerm}");
+                return NotFound($"No products found matching: {request.SearchTerm}");
 
             return Ok(products);
         }

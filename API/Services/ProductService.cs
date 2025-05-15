@@ -17,7 +17,7 @@ namespace API.Services
             _databaseContext = databaseContext;
         }
 
-        public List<ProductResponse> GetProducts(string searchTerm, int category)
+        public List<ProductResponse> GetProducts(ProductRequest request)
         {
             var products = new List<ProductResponse>();
             //int w_category = Convert.ToInt32(category);
@@ -30,8 +30,8 @@ namespace API.Services
                     CommandType = CommandType.StoredProcedure
                 };
                 // Add parameter to avoid SQL injection
-                command.Parameters.AddWithValue("@search_term", searchTerm);
-                command.Parameters.AddWithValue("@sys_category_mapping_id", category);
+                command.Parameters.AddWithValue("@search_term", request.SearchTerm);
+                command.Parameters.AddWithValue("@sys_category_mapping_id", request.Category);
 
                 // Execute the query
                 using (var reader = command.ExecuteReader())

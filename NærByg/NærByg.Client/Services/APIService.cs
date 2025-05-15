@@ -21,10 +21,12 @@ namespace NærByg.Client.Services
         /// <returns>A list of <see cref="ProductsResponse"/> objects matching the search criteria.</returns>
         /// <exception cref="InvalidOperationException">Thrown if the API response is null, indicating a potential API issue.</exception>
         public async Task<List<ProductResponse>> GetProductsFromSearched(ProductRequest productsRequest)
-        {
+        {/*
             var response = await _httpClient.GetFromJsonAsync<List<ProductResponse>>($"api/Product/GetProducts?searchTerm={productsRequest.SearchTerm}&category={productsRequest.Category}");
+            return response ?? new List<ProductResponse>();*/
 
-            return response ?? new List<ProductResponse>();
+            var response = await _httpClient.PostAsJsonAsync("api/Product/GetProducts", productsRequest);
+            return await response.Content.ReadFromJsonAsync<List<ProductResponse>>() ?? new List<ProductResponse>();
         }
 
         /// <summary>
