@@ -26,7 +26,7 @@ namespace API.Controllers
         /// An HTTP 200 OK response with the list of matching products, 
         /// or an HTTP 404 Not Found if no products are found.
         /// </returns>
-        [HttpGet("GetProducts")]
+        [HttpPost("GetProducts")]
         public IActionResult GetProducts([FromBody] ProductRequest request)
         {            
             List<ProductResponse> products = _productService.GetProducts(request);
