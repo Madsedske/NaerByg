@@ -10,7 +10,7 @@ internal class Program
         builder.Services.AddScoped(sp => new HttpClient
         {
             //BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
-            BaseAddress = new Uri("https://localhost:7045/")
+            BaseAddress = new Uri("https://nbapi.nærbyg.dk/")
         });
 
         builder.Services.AddScoped<APIService>();

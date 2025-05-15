@@ -42,10 +42,32 @@ html, body {
     }
 }
 
+
+@media (max-width: 768px) {
+    .input-search {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .btn-search {
+        flex-shrink: 0;
+    }
+
+    .input.input-address {
+        width: 250px;
+    }
+}
+.search-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: nowrap;
+}
+
 .input-search {
     height: 40px;
     width: 600px;
-    max-width: 600px;
     padding: 10px;
     font-size: 18px;
     letter-spacing: 2px;
@@ -185,6 +207,7 @@ html, body {
     Sekunder: #4E9AD5
     Gul: #AD9224
 */
+
 .navbar {
     background-color: #242BAD;
 }
@@ -216,11 +239,11 @@ html, body {
 .navbar-toggler { /*knappen når skærmen er lille*/
     color: white;
     background-color: white;
+    border: 2px solid #AD9224;
 }
 
 .navbar-toggler-icon {
     color: blue;
-    background-color: yellow;
 }
 
 .dropdown .dropdown-menu {
