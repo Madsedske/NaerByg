@@ -4,6 +4,7 @@ using Shared.DTOs;
 using System.Data;
 using System.Reflection.PortableExecutable;
 using API.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Services
 {
@@ -19,9 +20,11 @@ namespace API.Services
         public List<ProductResponse> GetProducts(string searchTerm, int category)
         {
             var products = new List<ProductResponse>();
-
+            //int w_category = Convert.ToInt32(category);
             using var connection = _databaseContext.CreateConnection();
             {
+                connection.Open();
+
                 using var command = new MySqlCommand("GetProducts", (MySqlConnection)connection)
                 {
                     CommandType = CommandType.StoredProcedure
@@ -48,7 +51,7 @@ namespace API.Services
                             ChainLogoURL = reader.GetString("ChainLogoURL"),
                             ShopName = reader.GetString("ShopName"),
                             ShopAddress = reader.GetString("ShopAddress"),
-                            ShopPostArea = reader.GetString("ShopPostArea"),
+                            ShopPostArea = reader.GetInt32("ShopPostArea"),
                             ShopCity = reader.GetString("ShopCity"),
                             ShopPhoneNo = reader.GetString("ShopPhoneNo"),
                             ShopOpeningHours = reader.GetString("ShopOpeningHours")
@@ -62,5 +65,4 @@ namespace API.Services
             return products;
         }
     }
-}
-
+} 

@@ -11,10 +11,10 @@ builder.Services.AddRazorComponents()
 builder.Services.AddHttpClient<APIService>((serviceProvider, client) =>
 {
     var config = serviceProvider.GetRequiredService<IConfiguration>();
-    var apiKey = config["ApiKeys:Internal"];
+    var apiKey = config["ApiKey:Internal"];
     client.DefaultRequestHeaders.Add("x-api-key", apiKey);
 
-    client.BaseAddress = new Uri("http://localhost:7045/");
+    client.BaseAddress = new Uri("https://nbapi.xn--nrbyg-sra.dk/");
 });
 
 var app = builder.Build();
@@ -40,5 +40,4 @@ app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(NærByg.Client._Imports).Assembly);
 
-//app.Run("http://localhost:5003/");
 app.Run();

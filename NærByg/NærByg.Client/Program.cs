@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using NærByg.Client.Services;
+using NÃ¦rByg.Client.Services;
 
 internal class Program
 {
@@ -10,7 +10,7 @@ internal class Program
         builder.Services.AddScoped(sp => new HttpClient
         {
             //BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
-            BaseAddress = new Uri("https://nbapi.nærbyg.dk/")
+            BaseAddress = new Uri("https://nbapi.xn--nrbyg-sra.dk/")
         });
 
         builder.Services.AddScoped<APIService>();

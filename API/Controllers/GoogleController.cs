@@ -30,12 +30,43 @@ namespace API.Controllers
         /// An <see cref="ActionResult{GoogleDistanceResponse}"/> containing distance and duration details if successful,
         /// or a BadRequest result if the calculation fails.
         /// </returns>
-        [HttpGet("calculate")] 
-        public async Task<ActionResult<GoogleDistanceResponse>> GetCalculatedDistance(string inputAddress, string shopAddress, string postarea)
+        [HttpGet("calculate")]
+        public async Task<ActionResult<GoogleDistanceResponse>> GetCalculatedDistance(string? inputAddress, string shopAddress, int postarea)
         {
+
+            if (string.IsNullOrWhiteSpace(inputAddress))
+            {
+                return Ok(new GoogleDistanceResponse
+                {
+                    status = "OK",
+                    rows = new List<Row>
+                    {
+                        new Row
+                        {
+                            elements = new List<Element>
+                            {
+                                new Element
+                                {
+                                    distance = new DistanceInfo
+                                    {
+                                        text = "Ikke angivet",
+                                        value = 0
+                                    },
+                                    duration = new DurationInfo
+                                    {
+                                        text = "Ikke angivet",
+                                        value = 0
+                                    },
+                                    status = "NO_INPUT_ADDRESS"
+                                }
+                            }
+                        }
+                    }
+                });
+            }
             var data = await _googleService.CalculateDistance(inputAddress, shopAddress, postarea);
 
-            if (data == null) 
+            if (data == null)
                 return BadRequest($"Failed to fetch data");
 
             return Ok(data);

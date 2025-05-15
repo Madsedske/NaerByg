@@ -76,7 +76,7 @@
                         <div class="cardProductList" @onclick="() => ShowOverlay(product)">
                             <div class="row">
                                 <div class="col-md-4 d-flex align-items-center justify-content-center">
-                                    <img src="@($"https://www.nærbyg.dk/product_pictures/{product.PictureURL}")" class="productImg" alt="...">
+                                    <img src="@($"product_pictures/{product.PictureURL}")" class="productImg" alt="...">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="row">
@@ -88,7 +88,7 @@
                                     </div>
                                     <div class="cardBody">
                                         <div class="row">
-                                            <div class="col-sm-5 cardBodyText"><p>Afstand: @product.DistanceToShop km</p></div>
+                                            <div class="col-sm-5 cardBodyText"><p>Afstand: @(product.DistanceToShop > 0 ? $"{product.DistanceToShop} km" : "--")</p></div>
                                             <div class="col-sm-7 cardBodyText"><p>Varenr: @product.ProductSku</p></div>
                                         </div>
                                         <div class="row">
@@ -97,7 +97,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-5 cardBodyText"><p>Antal: @product.Stock stk.</p></div>
-                                            <div class="col-sm-7 cardBodyText"><p>Adresse: @product.ShopAddress</p></div>
+                                            <div class="col-sm-7 cardBodyText"><p>Adresse: @product.ShopAddress, @product.ShopPostArea @product.ShopCity</p></div>
                                         </div>
                                     </div>
                                 </div>
@@ -164,7 +164,7 @@
     private ProductRequest _ProductsRequest = new ProductRequest
         {
             SearchTerm = string.Empty,
-            Category = null
+            Category = 0
         };
 
     protected override void OnInitialized()
