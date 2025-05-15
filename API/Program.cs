@@ -47,13 +47,14 @@ internal class Program
         });
 
         // Add CORS policy
+
         builder.Services.AddCors(options =>
         {
-            options.AddPolicy("AllowBlazorClient", policy =>
+            options.AddPolicy("AllowAll", policy =>
             {
-                policy.AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials();
+                policy.AllowAnyOrigin()
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
             });
         });
 
@@ -132,14 +133,14 @@ internal class Program
         }
 
         // Use CORS
-        app.UseCors("AllowBlazorClient");
+        app.UseCors("AllowAll");
 
         // Use Authentication & Authorization
         app.UseAuthentication();
         app.UseAuthorization();
 
         // API Key Middleware (for securing endpoints)
-        app.UseMiddleware<ApiKeyMiddleware>();
+      //  app.UseMiddleware<ApiKeyMiddleware>();
 
 
         // Swagger Setup

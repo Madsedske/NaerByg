@@ -33,12 +33,12 @@ namespace NærByg.Client.Services
         /// </summary>
         /// <param name="inputAddress">The origin address entered by the user.</param>
         /// <param name="shopAddress">The destination shop address.</param>
-        /// <param name="postarea">An additional location detail used in the distance calculation.</param>
+        /// <param name="postArea">An additional location detail used in the distance calculation.</param>
         /// <returns>A <see cref="GoogleDistanceResponse"/> containing distance and duration details.</returns>
         /// <exception cref="InvalidOperationException">Thrown if the response from the internal API is null.</exception>
-        public async Task<GoogleDistanceResponse> GoogleMatrixAPI(string inputAddress, string shopAddress, string postarea)
+        public async Task<GoogleDistanceResponse> GoogleMatrixAPI(string inputAddress, string shopAddress, int postArea)
         {
-            var url = $"api/google/calculate?inputAddress={Uri.EscapeDataString(inputAddress)}&shopAddress={Uri.EscapeDataString(shopAddress)}&postarea={Uri.EscapeDataString(postarea)}";
+            var url = $"api/google/calculate?inputAddress={Uri.EscapeDataString(inputAddress)}&shopAddress={Uri.EscapeDataString(shopAddress)}&postarea={postArea}";
           
             var result = await _httpClient.GetFromJsonAsync<GoogleDistanceResponse>(url);
             return result ?? throw new InvalidOperationException($"No response received from Google distance endpoint for address '{inputAddress}'");

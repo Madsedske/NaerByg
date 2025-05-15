@@ -36,7 +36,7 @@ public class ProviderSyncJob : BackgroundService
                 var client = _httpClientFactory.CreateClient();
                 var request = new HttpRequestMessage(
                     HttpMethod.Post,
-                    $"https://xn--nrbyg-sra.dk/api/ProviderCheck/GetProviderData?chainId={chainId}");
+                    $"https://nbapi.xn--nrbyg-sra.dk/api/ProviderCheck/GetProviderData?chainId={chainId}");
 
                 request.Headers.Add("x-api-key", apiKey);
 

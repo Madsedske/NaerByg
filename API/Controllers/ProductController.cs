@@ -29,6 +29,7 @@ namespace API.Controllers
         [HttpGet("GetProducts")]
         public IActionResult GetProducts(string searchTerm, int category)
         {
+            
             List<ProductResponse> products = _productService.GetProducts(searchTerm, category);
 
             if (products == null || products.Count == 0)
