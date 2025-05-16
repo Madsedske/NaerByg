@@ -42,9 +42,8 @@ internal class Program
             });
         });
 
-        // Database Context via Factory
-        builder.Services.AddScoped<IDbContextFactory, DbContextFactory>();
         builder.Services.AddScoped<IDataService, DataService>();
+        builder.Services.AddTransient<IDbContextFactory, DbContextFactory>();
 
         // Authentication & Authorization
         var configuration = builder.Configuration;

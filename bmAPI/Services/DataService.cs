@@ -111,10 +111,10 @@ namespace bmAPI.Services
         }
 
         public List<TResponse> ReturnData<TResponse>(
-      int chainId,
-      DateTime lastUpdated,
-      DataEndpoint endpoint,
-      Func<MySqlDataReader, TResponse> mapFunc)
+          int chainId,
+          DateTime lastUpdated,
+          DataEndpoint endpoint,
+          Func<MySqlDataReader, TResponse> mapFunc)
         {
             try
             {
@@ -140,9 +140,8 @@ namespace bmAPI.Services
             }
             catch (Exception ex)
             {
-                throw new ApplicationException($"[ReturnData]Fejl ved datahentning fra '{endpoint}' (chainId={chainId})", ex);
+                throw new ApplicationException($"[ReturnData] Fejl ved datahentning fra '{endpoint}' (chainId={chainId})", ex);
             }
         }
-
     }
 }

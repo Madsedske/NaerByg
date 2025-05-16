@@ -35,7 +35,7 @@ namespace bmAPI.Services.Helpers
             if (string.IsNullOrEmpty(connectionString))
                 throw new InvalidOperationException($"Connection string '{connectionName}' not found.");
 
-            Console.WriteLine($"Bruger connection string for chainId {chainId}: {connectionString}");
+            Console.WriteLine($"Bruger for chainId {chainId} - navn: {connectionName} connectionstring: {connectionString}");
 
             var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
             optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
