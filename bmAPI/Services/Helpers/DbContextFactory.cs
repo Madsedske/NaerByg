@@ -1,5 +1,6 @@
 ﻿using bmAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace bmAPI.Services.Helpers
 {
@@ -14,15 +15,27 @@ namespace bmAPI.Services.Helpers
 
         public DatabaseContext Create(int chainId)
         {
+            var connCheck = new[] { "db_staerk", "db_harrag_nybold", "db_jex_og_fim" };
+            foreach (var conn in connCheck)
+            {
+                if (string.IsNullOrWhiteSpace(_configuration.GetConnectionString(conn)))
+                    throw new InvalidOperationException($"Connection string '{conn}' is missing!");
+            }
+
             var connectionName = chainId switch
             {
-                1 => "ConnectionStrings:db_staerk",
-                2 => "ConnectionStrings:db_harrag_nybold",
-                3 => "ConnectionStrings:db_jex_og_fim",
+                1 => "db_staerk",
+                2 => "db_harrag_nybold",
+                3 => "db_jex_og_fim",
                 _ => throw new ArgumentException("Invalid Chain Id.")
             };
 
-            var connectionString = _configuration[connectionName];
+            var connectionString = _configuration.GetConnectionString(connectionName);
+
+            if (string.IsNullOrEmpty(connectionString))
+                throw new InvalidOperationException($"Connection string '{connectionName}' not found.");
+
+            Console.WriteLine($"Bruger for chainId {chainId} - navn: {connectionName} connectionstring: {connectionString}");
 
             var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
             optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));

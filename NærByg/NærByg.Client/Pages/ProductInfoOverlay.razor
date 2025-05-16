@@ -59,12 +59,29 @@
                     <!-- Kort -->
                     <div class="col-12 col-md-8 order-4 order-md-3">
                         <div class="ratio ratio-4x3">
-                            <iframe frameborder="0"
-                                    style="border:0"
-                                    referrerpolicy="no-referrer-when-downgrade"
-                                    allowfullscreen
-                                    src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyDKO6ebfn7HyqxC20WyE16paoRSZE86fQw&origin=@Uri.EscapeDataString(InputAdress + " Denmark")&destination=@Uri.EscapeDataString(Product.ShopAddress + " " + Product.ShopPostArea + " Denmark")&avoid=tolls|highways">
-                            </iframe>
+                            @if (!string.IsNullOrWhiteSpace(InputAdress))
+                            {
+                                <iframe frameborder="0"
+                                        style="border:0"
+                                        referrerpolicy="no-referrer-when-downgrade"
+                                        allowfullscreen
+                                        src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyDKO6ebfn7HyqxC20WyE16paoRSZE86fQw
+                                            &origin=@Uri.EscapeDataString(InputAdress + ", Denmark")
+                                            &destination=@Uri.EscapeDataString(Product.ShopAddress + " " + Product.ShopPostArea + " " + Product.ShopCity + ", Denmark")
+                                            &avoid=tolls|highways">
+                                </iframe>
+                            }
+                            else
+                            {
+                                <iframe frameborder="0"
+                                        style="border:0"
+                                        referrerpolicy="no-referrer-when-downgrade"
+                                        allowfullscreen
+                                        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDKO6ebfn7HyqxC20WyE16paoRSZE86fQw
+                                            &q=@Uri.EscapeDataString(Product.ShopAddress + " " + Product.ShopPostArea + " " + Product.ShopCity + ", Denmark")">
+                                </iframe>
+                            }
+
                         </div>
                     </div>
                 </div>

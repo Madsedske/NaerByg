@@ -109,37 +109,39 @@ namespace bmAPI.Services
                 }
             );
         }
-       
+
         public List<TResponse> ReturnData<TResponse>(
-            int chainId,
-            DateTime lastUpdated,
-            DataEndpoint endpoint,
-            Func<MySqlDataReader,TResponse> mapFunc
-        )
+          int chainId,
+          DateTime lastUpdated,
+          DataEndpoint endpoint,
+          Func<MySqlDataReader, TResponse> mapFunc)
         {
-            var storedProcedureName = endpoint.ToStoredProcedureName();
-            var data = new List<TResponse>();
+            try
+            {
+                var storedProcedureName = endpoint.ToStoredProcedureName();
+                var data = new List<TResponse>();
 
-            using (var context = _dbContextFactory.Create(chainId)) {
-                using (var connection = context.CreateConnection())
+                using var context = _dbContextFactory.Create(chainId);
+                using var connection = context.CreateConnection();
+                connection.Open();
+
+                using var command = new MySqlCommand(storedProcedureName, (MySqlConnection)connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@last_update", lastUpdated);
+
+                using var reader = command.ExecuteReader();
+                while (reader.Read())
                 {
-                    connection.Open();
-
-                    using var command = new MySqlCommand(storedProcedureName, (MySqlConnection)connection);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@last_update", lastUpdated);
-
-                    using var reader = command.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        var item = mapFunc(reader);
-                        data.Add(item);
-                    }
-
-                    return data;
+                    var item = mapFunc(reader);
+                    data.Add(item);
                 }
+
+                return data;
             }
-            
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"[ReturnData] Fejl ved datahentning fra '{endpoint}' (chainId={chainId})", ex);
+            }
         }
     }
 }
