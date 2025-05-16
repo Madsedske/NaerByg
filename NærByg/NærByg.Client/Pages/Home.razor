@@ -208,7 +208,7 @@
 
                 FilterAndOrder(ProductListItems);
 
-                if (SearchItemInput is null)
+                if (SearchItemInput is null || SearchItemInput == "")
                     SearchedItemLabel = SelectedCategoryName;
                 else
                     SearchedItemLabel = SearchItemInput;
