@@ -19,6 +19,7 @@
             <div class="col-12"></div>
         </div>
     }
+
     <!-- Container with the input fields, button and range slider -->
     <div class="container">
         <div class="row">
@@ -59,7 +60,15 @@
             </div>
         </div>
     </div>
+    @if (!string.IsNullOrEmpty(AlertMessage))
+    {
+        <div class="container">
+            <div class="alert @AlertType alert-dismissible fade show text-center" role="alert">
+                @AlertMessage
+            </div>
 
+        </div>
+    }
     <div class="container">
         <div class="row">
             <div class="col-1 col-md-1"></div>
@@ -188,6 +197,7 @@
     private async Task SearchItem()
     {
         IsLoading = true;
+        SearchedItemLabel = string.Empty;
         try
         {
             var request = new ProductRequest
@@ -198,32 +208,24 @@
 
             List<ProductResponse> productsResponse = await APIService.GetProductsFromSearched(request);
 
-            if (productsResponse != null && productsResponse.Count > 0)
-            {
-                ProductListItems = productsResponse;
+            ProductListItems = productsResponse;
 
-                await AddDistanceToProducts(ProductListItems);
+            await AddDistanceToProducts(ProductListItems);
 
-                FilterAndOrder(ProductListItems);
+            FilterAndOrder(ProductListItems);
 
-                if (SearchItemInput is null || SearchItemInput == "")
-                    SearchedItemLabel = SelectedCategoryName;
-                else
-                    SearchedItemLabel = SearchItemInput;
-
-                RemoveAfterSearch = false;
-                ProductListTrue = true;
-                StateHasChanged();
-            }
+            if (SearchItemInput is null || SearchItemInput == "")
+                SearchedItemLabel = SelectedCategoryName;
             else
-            {
-                AlertWithTimer("Ingen produkter fundet...", 3);
-                AlertType = "alert-warning";
-            }
+                SearchedItemLabel = SearchItemInput;
+
+            RemoveAfterSearch = false;
+            ProductListTrue = true;
+            StateHasChanged();
         }
         catch (Exception ex)
         {
-            AlertWithTimer($"{ex.Message}", 5);
+            AlertWithTimer($"{ex.Message}.", 5);
             AlertType = "alert-danger";
         }
         finally

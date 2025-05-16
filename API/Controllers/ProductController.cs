@@ -32,7 +32,7 @@ namespace API.Controllers
             List<ProductResponse> products = _productService.GetProducts(request);
 
             if (products == null || products.Count == 0)
-                return NotFound($"No products found matching: {request.SearchTerm}");
+                return NotFound($"Ingen produkter matcher din søgning for: {request.SearchTerm}");
 
             return Ok(products);
         }
