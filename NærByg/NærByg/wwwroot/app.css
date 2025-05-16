@@ -3,9 +3,22 @@ html, body {
     overflow-x: hidden;
 }
 
-.rowFills {
+.main {
+    flex:1;
+}
+.page {
+    min-height: 100vh;
+    display: flex;
+}
+
+.rowFillsTop {
     margin-top: 100px;
     margin-bottom: 100px;
+}
+
+.rowFillsBottom {
+    margin-top: 100px;
+    margin-bottom: 250px;
 }
 
 .myBorder { /*TEST*/
