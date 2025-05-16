@@ -28,7 +28,7 @@
                     <div class="col-12">
                         <div class="search-wrapper">
                             <input type="text" class="input-search mx-auto w-100" @bind-value="SearchItemInput" @bind-value:event="oninput" @onkeydown="HandleKeyPress" placeholder="Søg efter et produkt..">
-                            <button @onclick="SearchItem" class="btn-search"><i class="fas fa-search"></i></button>
+                            <button @onclick="SearchItemFromInput" class="btn-search"><i class="fas fa-search"></i></button>
                         </div>
                     </div>
                 </div>
@@ -77,11 +77,11 @@
                 @if (ProductListTrue)
                 {
                     <div>
-                        <p>Du har søgt på "@SearchedItemLabel"</p>
+                        <p>Viser resultater der matcher på @SearchedItemLabel – @ProductListItems.Count resultat(er) fundet</p>
                     </div>
                     @foreach (var product in ProductListItems)
                     {
-                        <div class="cardProductList"  @onclick="() => ShowOverlay(product)">
+                        <div class="cardProductList" @onclick="() => ShowOverlay(product)">
                             <div class="row">
                                 <div class="col-md-4 d-flex align-items-center justify-content-center">
                                     <img src="@($"product_pictures/{product.PictureURL}")" class="productImg" alt="...">
@@ -194,18 +194,23 @@
         }
     }
 
+    private async Task SearchItemFromInput()
+    {
+        SelectedCategoryId = null;
+        await SearchItem();
+    }
+
     private async Task SearchItem()
     {
         IsLoading = true;
         SearchedItemLabel = string.Empty;
+        var request = new ProductRequest
+            {
+                SearchTerm = SearchItemInput,
+                Category = SelectedCategoryId
+            };
         try
         {
-            var request = new ProductRequest
-                {
-                    SearchTerm = SearchItemInput,
-                    Category = SelectedCategoryId
-                };
-
             List<ProductResponse> productsResponse = await APIService.GetProductsFromSearched(request);
 
             ProductListItems = productsResponse;
@@ -215,7 +220,7 @@
             FilterAndOrder(ProductListItems);
 
             if (SearchItemInput is null || SearchItemInput == "")
-                SearchedItemLabel = SelectedCategoryName;
+                SearchedItemLabel = "kategori: " + SelectedCategoryName;
             else
                 SearchedItemLabel = SearchItemInput;
 
@@ -268,7 +273,7 @@
 
     private ProductResponse? selectedProduct;
     private void ShowOverlay(ProductResponse product)
-    {        
+    {
         selectedProduct = product;
         showOverlay = true;
     }
@@ -322,9 +327,11 @@
             SelectedCategoryId = catId;
             SelectedCategoryName = query.TryGetValue("name", out var nameVal) ? nameVal.ToString() : "";
 
-            Console.WriteLine($"Kategori valgt: {SelectedCategoryId} - {SelectedCategoryName}");
+            SearchItemInput = string.Empty;
 
             await SearchItem();
+            var baseUri = Navigation.BaseUri.TrimEnd('/');
+            Navigation.NavigateTo(baseUri, forceLoad: false);
         }
     }
 
