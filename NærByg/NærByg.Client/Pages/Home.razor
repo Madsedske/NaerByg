@@ -174,15 +174,15 @@
             Category = 0
         };
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         Navigation.LocationChanged += HandleLocationChanged;
-        ReadQuery();
+        await ReadQuery();
     }
 
     private void HandleLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
     {
-        ReadQuery();
+        _ = InvokeAsync(async () => await ReadQuery());
     }
 
     private async Task HandleKeyPress(KeyboardEventArgs e)
@@ -221,6 +221,7 @@
 
             RemoveAfterSearch = false;
             ProductListTrue = true;
+            IsLoading = false;
             StateHasChanged();
         }
         catch (Exception ex)
@@ -311,7 +312,7 @@
         }
     }
 
-    private void ReadQuery()
+    private async Task ReadQuery()
     {
         var uri = new Uri(Navigation.Uri);
         var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
@@ -322,7 +323,8 @@
             SelectedCategoryName = query.TryGetValue("name", out var nameVal) ? nameVal.ToString() : "";
 
             Console.WriteLine($"Kategori valgt: {SelectedCategoryId} - {SelectedCategoryName}");
-            _ = SearchItem();
+
+            await SearchItem();
         }
     }
 
