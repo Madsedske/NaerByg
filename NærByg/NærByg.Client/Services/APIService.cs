@@ -26,7 +26,17 @@ namespace NærByg.Client.Services
             return response ?? new List<ProductResponse>();*/
 
             var response = await _httpClient.PostAsJsonAsync("api/Product/GetProducts", productsRequest);
-            return await response.Content.ReadFromJsonAsync<List<ProductResponse>>() ?? new List<ProductResponse>();
+
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadFromJsonAsync<List<ProductResponse>>();
+                return data ?? new List<ProductResponse>();
+            }
+            else
+            {
+                var errorText = await response.Content.ReadAsStringAsync(); // fx "No products found"
+                throw new Exception(errorText); // eller log det og returner tom liste
+            }
         }
 
         /// <summary>
