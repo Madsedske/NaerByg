@@ -1,11 +1,14 @@
 ﻿@page "/NavMenu"
+@using NærByg.Client.Services
 @rendermode InteractiveWebAssembly
 @inject NavigationManager Navigation
+@inject IJSRuntime JS
 
 <nav class="navbar navbar-expand-lg sticky-top">
     <div class="container-fluid">
 
-        <img src="/resources/Logo.png" alt="Logo" width="60" height="60" class="rounded-pill mx-auto d-block">
+        <img src="/resources/Logo.png" alt="Logo" width="60" height="60" class="rounded-pill mx-auto d-block" style="cursor: pointer"
+             @onclick="@(() => JS.InvokeVoidAsync("location.reload"))" />
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -156,7 +159,7 @@
     private void NavigateToCategory(CategoryItem item)
     {
         Navigation.NavigateTo($"/?category={item.CategoryId}&name={Uri.EscapeDataString(item.CategoryName)}");
-    }
+    }    
 
     private List<CategoryItem> bilFritidItems = new()
     {

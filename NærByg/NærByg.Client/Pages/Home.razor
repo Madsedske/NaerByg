@@ -235,8 +235,9 @@
             AlertType = "alert-danger";
         }
         finally
-        {
+        {                
             IsLoading = false;
+            StateHasChanged();
         }
     }
 
@@ -330,8 +331,6 @@
             SearchItemInput = string.Empty;
 
             await SearchItem();
-            var baseUri = Navigation.BaseUri.TrimEnd('/');
-            Navigation.NavigateTo(baseUri, forceLoad: false);
         }
     }
 
