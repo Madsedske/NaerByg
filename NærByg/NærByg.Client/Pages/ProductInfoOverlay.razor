@@ -5,88 +5,120 @@
     [Parameter] public bool IsVisible { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
     [Parameter] public ProductResponse? Product { get; set; }
+    private string AlertMessage { get; set; } = string.Empty;
+    private string AlertType { get; set; } = string.Empty;
 
     private void HandleBackdropClick()
     {
         OnClose.InvokeAsync();
     }
+
+    private void ClearAlert()
+    {
+        AlertMessage = string.Empty;
+    }
+
+    private async void AlertWithTimer(string alertMessage, double timeInSeconds)
+    {
+        AlertMessage = alertMessage;
+
+        // Wait for the specified time (converted to milliseconds)
+        await Task.Delay(TimeSpan.FromSeconds(timeInSeconds));
+
+        ClearAlert();
+
+        await InvokeAsync(StateHasChanged);
+    }
 }
 
-@if (IsVisible && Product is not null)
+
+
+@if (IsVisible)
 {
     <div class="overlay-backdrop" @onclick="HandleBackdropClick">
-        <div class="white-square container-fluid px-3 px-sm-4 px-md-5" @onclick:stopPropagation>
-            @ChildContent
+        @if (Product is not null)
+        {
+            <div class="white-square container-fluid px-3 px-sm-4 px-md-5" @onclick:stopPropagation>
+                @ChildContent
 
-            <div class="container-fluid p-3">
+                <div class="container-fluid p-3">
 
-                <!-- Øverste række (billede + tekst) -->
-                <div class="row">
-                    <!-- Billede -->
-                    <div class="col-12 col-md-3 order-1 order-md-1 d-flex justify-content-start">
-                        <img src="@($"product_pictures/{Product.ChainLogoURL}")" alt="Logo for byggemarked" class="img-fluid rounded" />
+                    <!-- Øverste række (billede + tekst) -->
+                    <div class="row">
+                        <!-- Billede -->
+                        <div class="col-12 col-md-3 order-1 order-md-1 d-flex justify-content-start">
+                            <img src="@($"product_pictures/{Product.ChainLogoURL}")" alt="Logo for byggemarked" class="img-fluid rounded" />
+                        </div>
+
+                        <!-- Top tekst -->
+                        <div class="col-12 col-md-9 order-2 order-md-2 text-md-end text-start">
+                            <div class="row">
+                                <div class="col-sm-5 cardBodyText"><p>Afstand: @(Product.DistanceToShop > 0 ? $"{Product.DistanceToShop} km" : "--")</p></div>
+                                <div class="col-sm-7 cardBodyText"><p>Varenr: @Product.ProductSku</p></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 cardBodyText"><p>Pris: @Product.Price kr.</p></div>
+                                <div class="col-sm-7 cardBodyText"><p>Butik: @Product.ShopName</p></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 cardBodyText"><p>Antal: @Product.Stock stk.</p></div>
+                                <div class="col-sm-7 cardBodyText"><p>Adresse: @Product.ShopAddress</p></div>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Top tekst -->
-                    <div class="col-12 col-md-9 order-2 order-md-2 text-md-end text-start">
-                        <div class="row">
-                            <div class="col-sm-5 cardBodyText"><p>Afstand: @(Product.DistanceToShop > 0 ? $"{Product.DistanceToShop} km" : "--")</p></div>
-                            <div class="col-sm-7 cardBodyText"><p>Varenr: @Product.ProductSku</p></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-5 cardBodyText"><p>Pris: @Product.Price kr.</p></div>
-                            <div class="col-sm-7 cardBodyText"><p>Butik: @Product.ShopName</p></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-5 cardBodyText"><p>Antal: @Product.Stock stk.</p></div>
-                            <div class="col-sm-7 cardBodyText"><p>Adresse: @Product.ShopAddress</p></div>
-                        </div>
-                    </div>
-                </div>
+                    <div class="my-3"></div>
 
-                <div class="my-3"></div>
+                    <!-- Nederste række (tekst + kort) -->
+                    <div class="row">
+                        <!-- Nederste tekst -->
+                        <div class="col-12 col-md-4 order-3 order-md-4 d-flex flex-column justify-content-center">
+                            <p><strong>Butik:</strong><br /> @Product.ShopName</p>
+                            <p><strong>Adresse:</strong><br /> @Product.ShopAddress, @Product.ShopPostArea @Product.ShopCity</p>
+                            <p><strong>Åbningstider:</strong><br /> @Product.ShopOpeningHours</p>
+                            <p><strong>Telefon nr.:</strong><br /> @Product.ShopPhoneNo</p>
+                        </div>
 
-                <!-- Nederste række (tekst + kort) -->
-                <div class="row">
-                    <!-- Nederste tekst -->
-                    <div class="col-12 col-md-4 order-3 order-md-4 d-flex flex-column justify-content-center">
-                        <p><strong>Butik:</strong><br /> @Product.ShopName</p>
-                        <p><strong>Adresse:</strong><br /> @Product.ShopAddress, @Product.ShopPostArea @Product.ShopCity</p>
-                        <p><strong>Åbningstider:</strong><br /> @Product.ShopOpeningHours</p>
-                        <p><strong>Telefon nr.:</strong><br /> @Product.ShopPhoneNo</p>
-                    </div>
-
-                    <!-- Kort -->
-                    <div class="col-12 col-md-8 order-4 order-md-3">
-                        <div class="ratio ratio-4x3">
-                            @if (!string.IsNullOrWhiteSpace(InputAdress))
-                            {
-                                <iframe frameborder="0"
-                                        style="border:0"
-                                        referrerpolicy="no-referrer-when-downgrade"
-                                        allowfullscreen
-                                        src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyDKO6ebfn7HyqxC20WyE16paoRSZE86fQw
+                        <!-- Kort -->
+                        <div class="col-12 col-md-8 order-4 order-md-3">
+                            <div class="ratio ratio-4x3">
+                                @if (!string.IsNullOrWhiteSpace(InputAdress))
+                                {
+                                    <iframe frameborder="0"
+                                            style="border:0"
+                                            referrerpolicy="no-referrer-when-downgrade"
+                                            allowfullscreen
+                                            src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyDKO6ebfn7HyqxC20WyE16paoRSZE86fQw
                                             &origin=@Uri.EscapeDataString(InputAdress + ", Denmark")
                                             &destination=@Uri.EscapeDataString(Product.ShopAddress + " " + Product.ShopPostArea + " " + Product.ShopCity + ", Denmark")
                                             &avoid=tolls|highways">
-                                </iframe>
-                            }
-                            else
-                            {
-                                <iframe frameborder="0"
-                                        style="border:0"
-                                        referrerpolicy="no-referrer-when-downgrade"
-                                        allowfullscreen
-                                        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDKO6ebfn7HyqxC20WyE16paoRSZE86fQw
+                                    </iframe>
+                                }
+                                else
+                                {
+                                    <iframe frameborder="0"
+                                            style="border:0"
+                                            referrerpolicy="no-referrer-when-downgrade"
+                                            allowfullscreen
+                                            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDKO6ebfn7HyqxC20WyE16paoRSZE86fQw
                                             &q=@Uri.EscapeDataString(Product.ShopAddress + " " + Product.ShopPostArea + " " + Product.ShopCity + ", Denmark")">
-                                </iframe>
-                            }
+                                    </iframe>
+                                }
 
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        }
+        else
+        {
+            <div class="container">
+                <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
+                    <p>Produktinformation utilgængelig</p>
+                </div>
+            </div>
+        }
     </div>
 }
 
