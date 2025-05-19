@@ -7,11 +7,14 @@
 @inject APIService APIService
 @inject IJSRuntime JSRuntime
 @inject NavigationManager Navigation
-@implements IDisposable
 
-<PageTitle>Hjem</PageTitle>
+<PageTitle>NærByg - Hjem</PageTitle>
 
-<div class="container text-center">
+<div class="sticky-top">
+    <NavMenu OnCategorySelected="HandleCategorySelected" />
+</div>
+
+<div class="container text-center mt-2 mb-2">
     @if (RemoveAfterSearch)
     {
         <!-- fill for the website design -->
@@ -35,7 +38,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="mt-3">
-                            <input class="input-address" type="text" id="adresseFormControlInput" @bind-value:event="oninput" @onkeydown="HandleKeyPress" @bind-value="AdresseInput" placeholder="Adresse">
+                            <input class="input-address" type="text" id="adresseFormControlInput" @bind-value:event="oninput" @onkeydown="HandleKeyPress" @bind-value="AdresseInput" placeholder="Ahorn Allé 3, 4100 Ringsted">
                         </div>
                     </div>
                 </div>
@@ -126,7 +129,7 @@
 
     <!-- fill for the website design -->
     <div class="row rowFillsBottom">
-        <div class="col-12 myBorder"></div>
+        <div class="col-12"></div>
     </div>
 
 
@@ -148,6 +151,11 @@
         slider.value = value;
     }
 </script>
+<script>
+    window.scrollToTop = () => {
+        window.scrollTo(0, 0);
+    };
+</script>
 
 @code {
     private bool RemoveAfterSearch { get; set; } = true;
@@ -161,7 +169,7 @@
     private string SearchItemInput { get; set; } = string.Empty;
     private string AdresseInput { get; set; } = string.Empty;
     private string kmRadiusValue { get; set; } = "50";
-    private string DistanceToShop { get; set; } = string.Empty;
+    private string? DistanceToShop { get; set; } = string.Empty;
     private int? SelectedCategoryId { get; set; }
     private string? SelectedCategoryName { get; set; }
     private string SearchedItemLabel { get; set; } = string.Empty;
@@ -174,23 +182,28 @@
             Category = 0
         };
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        Navigation.LocationChanged += HandleLocationChanged;
-        await ReadQuery();
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("scrollToTop");
+        }
     }
-
-    private void HandleLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    private async Task HandleCategorySelected((int CategoryId, string CategoryName) category)
     {
-        _ = InvokeAsync(async () => await ReadQuery());
+        SelectedCategoryId = category.CategoryId;
+        SelectedCategoryName = category.CategoryName;
+
+        SearchItemInput = string.Empty;
+        await SearchItem();
     }
 
     private async Task HandleKeyPress(KeyboardEventArgs e)
     {
-        // Form element for login should be able to logon the user with "Enter" key pressed
+        // Form element for searching with "Enter" key pressed
         if (e.Key == "Enter")
         {
-            await SearchItem();
+            await SearchItemFromInput();
         }
     }
 
@@ -215,9 +228,10 @@
 
             ProductListItems = productsResponse;
 
-            await AddDistanceToProducts(ProductListItems);
+            if (!string.IsNullOrWhiteSpace(AdresseInput))
+                await AddDistanceToProducts(ProductListItems);
 
-            FilterAndOrder(ProductListItems);
+            SortAndOrder(ProductListItems);
 
             if (SearchItemInput is null || SearchItemInput == "")
                 SearchedItemLabel = "kategori: " + SelectedCategoryName;
@@ -235,7 +249,7 @@
             AlertType = "alert-danger";
         }
         finally
-        {                
+        {
             IsLoading = false;
             StateHasChanged();
         }
@@ -250,8 +264,15 @@
                 var res = await APIService.GoogleMatrixAPI(AdresseInput, p.ShopAddress, p.ShopPostArea);
                 var distanceText = res?.rows?[0]?.elements?[0]?.distance?.text;
 
-                // Convert distanceText to double (e.g. "12.3 km" => 12.3)
-                p.DistanceToShop = double.Parse(distanceText.Replace(" km", "").Trim(), CultureInfo.InvariantCulture);
+                if (distanceText is null || distanceText == string.Empty)
+                {
+                    p.DistanceToShop = 0;
+                }
+                else
+                {
+                    // Convert distanceText to double (e.g. "12.3 km" => 12.3)
+                    p.DistanceToShop = double.Parse(distanceText.Replace(" km", "").Trim(), CultureInfo.InvariantCulture);
+                }
             }
             catch
             {
@@ -260,16 +281,19 @@
         });
 
         await Task.WhenAll(tasks);
+
+
     }
 
-    private void FilterAndOrder(List<ProductResponse> products)
+    private void SortAndOrder(List<ProductResponse> products)
     {
-        ProductListItems.RemoveAll(p => p.DistanceToShop > kmRadiusDisplay);
-
-        if (AdresseInput is null)
-            ProductListItems = ProductListItems.OrderBy(p => p.Price).ToList();
-        else
+        if (!string.IsNullOrWhiteSpace(AdresseInput))
+        {
+            ProductListItems.RemoveAll(p => p.DistanceToShop > kmRadiusDisplay || p.DistanceToShop == 0);
             ProductListItems = ProductListItems.OrderBy(p => p.DistanceToShop).ToList();
+        }
+        else
+            ProductListItems = ProductListItems.OrderBy(p => p.Price).ToList();
     }
 
     private ProductResponse? selectedProduct;
@@ -316,26 +340,5 @@
 
             kmRadiusValue = Convert.ToString(kmRadiusDisplay);
         }
-    }
-
-    private async Task ReadQuery()
-    {
-        var uri = new Uri(Navigation.Uri);
-        var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
-
-        if (query.TryGetValue("category", out var categoryValue) && int.TryParse(categoryValue, out var catId))
-        {
-            SelectedCategoryId = catId;
-            SelectedCategoryName = query.TryGetValue("name", out var nameVal) ? nameVal.ToString() : "";
-
-            SearchItemInput = string.Empty;
-
-            await SearchItem();
-        }
-    }
-
-    public void Dispose()
-    {
-        Navigation.LocationChanged -= HandleLocationChanged;
     }
 }

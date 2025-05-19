@@ -8,7 +8,7 @@
     <div class="container-fluid">
 
         <img src="/resources/Logo.png" alt="Logo" width="60" height="60" class="rounded-pill mx-auto d-block" style="cursor: pointer"
-             @onclick="@(() => JS.InvokeVoidAsync("location.reload"))" />
+             @onclick="@(() => JS.InvokeVoidAsync("clearUrlAndReload"))" />
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -148,18 +148,30 @@
         </div>
     </div>
 </nav>
+<script>
+    window.clearUrlAndReload = () => {
+        const url = new URL(window.location);
+        url.search = ""; // Remove query string
+        window.history.replaceState({}, "", url);
+        location.reload();
+    }
+</script>
 
 @code {
+    [Parameter] public EventCallback<(int CategoryId, string CategoryName)> OnCategorySelected { get; set; }
     public class CategoryItem
     {
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
     }
 
-    private void NavigateToCategory(CategoryItem item)
+    private async Task NavigateToCategory(CategoryItem item)
     {
-        Navigation.NavigateTo($"/?category={item.CategoryId}&name={Uri.EscapeDataString(item.CategoryName)}");
-    }    
+        if (OnCategorySelected.HasDelegate)
+        {
+            await OnCategorySelected.InvokeAsync((item.CategoryId, item.CategoryName));
+        }
+    }
 
     private List<CategoryItem> bilFritidItems = new()
     {

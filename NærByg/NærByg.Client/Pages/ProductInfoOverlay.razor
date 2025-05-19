@@ -39,17 +39,17 @@
             <div class="white-square container-fluid px-3 px-sm-4 px-md-5" @onclick:stopPropagation>
                 @ChildContent
 
-                <div class="container-fluid p-3">
+                <div class="container-fluid p-1">
 
                     <!-- Øverste række (billede + tekst) -->
                     <div class="row">
                         <!-- Billede -->
-                        <div class="col-12 col-md-3 order-1 order-md-1 d-flex justify-content-start">
-                            <img src="@($"product_pictures/{Product.ChainLogoURL}")" alt="Logo for byggemarked" class="img-fluid rounded" />
+                        <div class="col-12 col-md-6 order-1 order-md-1 d-flex justify-content-start">
+                            <img src="@($"product_pictures/{Product.ChainLogoURL}")" height="100" alt="Logo for byggemarked" class="img-fluid rounded" />
                         </div>
 
                         <!-- Top tekst -->
-                        <div class="col-12 col-md-9 order-2 order-md-2 text-md-end text-start">
+                        <div class="col-12 col-md-6 order-2 order-md-2 text-md-end text-start" style="color:#242BAD">
                             <div class="row">
                                 <div class="col-sm-5 cardBodyText"><p>Afstand: @(Product.DistanceToShop > 0 ? $"{Product.DistanceToShop} km" : "--")</p></div>
                                 <div class="col-sm-7 cardBodyText"><p>Varenr: @Product.ProductSku</p></div>
@@ -70,15 +70,17 @@
                     <!-- Nederste række (tekst + kort) -->
                     <div class="row">
                         <!-- Nederste tekst -->
-                        <div class="col-12 col-md-4 order-3 order-md-4 d-flex flex-column justify-content-center">
+                        <div class="col-12 col-md-3 order-3 order-md-4 d-flex flex-column text-center justify-content-center" style="color:#242BAD">
                             <p><strong>Butik:</strong><br /> @Product.ShopName</p>
                             <p><strong>Adresse:</strong><br /> @Product.ShopAddress, @Product.ShopPostArea @Product.ShopCity</p>
-                            <p><strong>Åbningstider:</strong><br /> @Product.ShopOpeningHours</p>
+                            <p class="mx-auto text-center" style="width:140px">
+                                <strong>Åbningstider:</strong><br /> @Product.ShopOpeningHours
+                            </p>
                             <p><strong>Telefon nr.:</strong><br /> @Product.ShopPhoneNo</p>
                         </div>
 
                         <!-- Kort -->
-                        <div class="col-12 col-md-8 order-4 order-md-3">
+                        <div class="col-12 col-md-9 order-4 order-md-3">
                             <div class="ratio ratio-4x3">
                                 @if (!string.IsNullOrWhiteSpace(InputAdress))
                                 {
@@ -102,7 +104,6 @@
                                             &q=@Uri.EscapeDataString(Product.ShopAddress + " " + Product.ShopPostArea + " " + Product.ShopCity + ", Denmark")">
                                     </iframe>
                                 }
-
                             </div>
                         </div>
                     </div>
