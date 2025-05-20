@@ -120,7 +120,7 @@ html, body {
 
     .input-address::placeholder {
         color: #242BAD;
-        font-size: 14px;
+        font-size: 15px;
         letter-spacing: 2px;
         font-weight: 100;
         font-style: italic;

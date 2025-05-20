@@ -40,36 +40,9 @@
                 @ChildContent
 
                 <div class="container-fluid p-1">
-
-                    <!-- Øverste række (billede + tekst) -->
-                    <div class="row">
-                        <!-- Billede -->
-                        <div class="col-12 col-lg-6 order-1 order-lg-1 d-flex justify-content-start">
-                            <img src="@($"product_pictures/{Product.ChainLogoURL}")" height="100" alt="Logo for byggemarked" class="img-fluid rounded" />
-
-                        </div>
-                    </div>
-
-                    <div class="my-3"></div>
-
-                    <!-- Nederste række (tekst + kort) -->
-                    <div class="row">
-                        <!-- Nederste tekst -->
-                        <div class="col-12 col-lg-3 order-2 order-lg-2 d-flex flex-column text-center justify-content-center" style="color:#242BAD">
-                            <p><strong>Antal:</strong><br /> @Product.Stock stk.</p>
-                            <p><strong>Afstand:</strong><br /> @(Product.DistanceToShop > 0 ? $"{Product.DistanceToShop} km" : "--")</p>
-                            <p><strong>Pris:</strong><br /> @Product.Price kr.</p>
-
-                            <p><strong>Butik:</strong><br /> @Product.ShopName</p>
-                            <p><strong>Adresse:</strong><br /> @Product.ShopAddress, @Product.ShopPostArea @Product.ShopCity</p>
-                            <p class="mx-auto text-center" style="width:140px">
-                                <strong>Åbningstider:</strong><br /> @Product.ShopOpeningHours
-                            </p>
-                            <p><strong>Telefon nr.:</strong><br /> @Product.ShopPhoneNo</p>
-                        </div>
-
-                        <!-- Kort -->
-                        <div class="col-12 col-lg-9 order-3 order-lg-3">
+                    <div class="row flex-lg-nowrap">
+                        <!-- Map -->
+                        <div class="col-12 col-lg-9 order-3 order-lg-1 mb-3 mb-lg-0">
                             <div class="ratio ratio-4x3">
                                 @if (!string.IsNullOrWhiteSpace(InputAdress))
                                 {
@@ -78,9 +51,9 @@
                                             referrerpolicy="no-referrer-when-downgrade"
                                             allowfullscreen
                                             src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyDKO6ebfn7HyqxC20WyE16paoRSZE86fQw
-                                            &origin=@Uri.EscapeDataString(InputAdress + ", Denmark")
-                                            &destination=@Uri.EscapeDataString(Product.ShopAddress + " " + Product.ShopPostArea + " " + Product.ShopCity + ", Denmark")
-                                            &avoid=tolls|highways">
+                                        &origin=@Uri.EscapeDataString(InputAdress + ", Denmark")
+                                        &destination=@Uri.EscapeDataString(Product.ShopAddress + " " + Product.ShopPostArea + " " + Product.ShopCity + ", Denmark")
+                                        &avoid=tolls|highways">
                                     </iframe>
                                 }
                                 else
@@ -90,9 +63,39 @@
                                             referrerpolicy="no-referrer-when-downgrade"
                                             allowfullscreen
                                             src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDKO6ebfn7HyqxC20WyE16paoRSZE86fQw
-                                            &q=@Uri.EscapeDataString(Product.ShopAddress + " " + Product.ShopPostArea + " " + Product.ShopCity + ", Denmark")">
+                                        &q=@Uri.EscapeDataString(Product.ShopAddress + " " + Product.ShopPostArea + " " + Product.ShopCity + ", Denmark")">
                                     </iframe>
                                 }
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Image + Text stacked -->
+                        <div class="col-12 col-lg-3 order-1 order-lg-2 d-flex flex-column align-items-center text-center" style="color:#242BAD">
+                            <!-- Image -->
+                            <div class="mb-3">
+                                <img src="@($"product_pictures/{Product.PictureURL}")" class="productImg" alt="...">
+                                <p><strong>@Product.Brand @Product.ProductName</strong></p>
+                            </div>
+
+                            <!-- Text -->
+                            <div>
+                                <p><strong>Antal</strong><br /> @Product.Stock stk.</p>
+                                <p><strong>Afstand</strong><br /> @(Product.DistanceToShop > 0 ? $"{Product.DistanceToShop} km" : "--")</p>
+                                <p><strong>Pris</strong><br /> @Product.Price kr.</p>
+                                <div class="row">
+                                    <p>
+                                        <strong>Butik</strong><br />
+                                        <img src="@($"product_pictures/{Product.ChainLogoURL}")" height="40" width="50" alt="Logo for byggemarked" class="img-fluid rounded" />
+                                    </p>
+                                </div>
+                                <div class="row">
+                                    <p>@Product.ShopName</p>
+                                </div>
+                                <p><strong>Adresse</strong><br /> @Product.ShopAddress, @Product.ShopPostArea @Product.ShopCity</p>
+                                <p class="mx-auto text-center" style="width:140px">
+                                    <strong>Åbningstider</strong><br /> @Product.ShopOpeningHours
+                                </p>
+                                <p><strong>Telefon nr.</strong><br /> @Product.ShopPhoneNo</p>
                             </div>
                         </div>
                     </div>

@@ -102,7 +102,7 @@
                                     </div>
                                     <div class="cardBody">
                                         <div class="row">
-                                            <div class="col-sm-5 cardBodyText"><p>Afstand: @(product.DistanceToShop > 0 ? $"{product.DistanceToShop} km" : "--")</p></div>
+                                            <div class="col-sm-5 cardBodyText"><p>Afstand: @(product.DistanceToShop > -1 ? $"{product.DistanceToShop} km" : "--")</p></div>
                                             <div class="col-sm-7 cardBodyText"><p>Varenr: @product.ProductSku</p></div>
                                         </div>
                                         <div class="row">
@@ -267,9 +267,16 @@
             try
             {
                 var res = await APIService.GoogleMatrixAPI(AdresseInput, p.ShopAddress, p.ShopPostArea);
+
+                if (res?.status != "OK")
+                {
+                    p.DistanceToShop = -1;
+                    return;
+                }
+
                 var distanceText = res?.rows?[0]?.elements?[0]?.distance?.text;
 
-                if (distanceText is null || distanceText == string.Empty)
+                if (string.IsNullOrWhiteSpace(distanceText))
                 {
                     p.DistanceToShop = 0;
                 }
@@ -284,17 +291,14 @@
                 p.DistanceToShop = 0;
             }
         });
-
         await Task.WhenAll(tasks);
-
-
     }
 
     private void SortAndOrder(List<ProductResponse> products)
     {
         if (!string.IsNullOrWhiteSpace(AdresseInput))
         {
-            ProductListItems.RemoveAll(p => p.DistanceToShop > kmRadiusDisplay || p.DistanceToShop == 0);
+            ProductListItems.RemoveAll(p => p.DistanceToShop > kmRadiusDisplay);
             ProductListItems = ProductListItems.OrderBy(p => p.DistanceToShop).ToList();
         }
         else
