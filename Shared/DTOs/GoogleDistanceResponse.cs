@@ -19,18 +19,12 @@ namespace Shared.DTOs
 
     public class Element
     {
-        public DistanceInfo? distance { get; set; }
-        public DurationInfo? duration { get; set; }
-        public string? status { get; set; }
+        public Info? distance { get; set; }
+        public Info? duration { get; set; }
+        public Info? status { get; set; }
     }
 
-    public class DistanceInfo
-    {
-        public string? text { get; set; }
-        public int value { get; set; }
-    }
-
-    public class DurationInfo
+    public class Info
     {
         public string? text { get; set; }
         public int value { get; set; }

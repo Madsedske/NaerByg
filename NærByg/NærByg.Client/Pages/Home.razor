@@ -268,7 +268,7 @@
             {
                 var res = await APIService.GoogleMatrixAPI(AdresseInput, p.ShopAddress, p.ShopPostArea);
 
-                if (res?.status != "OK")
+                if (res?.status != "OK" || res?.rows?[0]?.elements?[0]?.status?.text == "NOT_FOUND")
                 {
                     p.DistanceToShop = -1;
                     return;
