@@ -44,24 +44,9 @@
                     <!-- Øverste række (billede + tekst) -->
                     <div class="row">
                         <!-- Billede -->
-                        <div class="col-12 col-md-6 order-1 order-md-1 d-flex justify-content-start">
+                        <div class="col-12 col-lg-6 order-1 order-lg-1 d-flex justify-content-start">
                             <img src="@($"product_pictures/{Product.ChainLogoURL}")" height="100" alt="Logo for byggemarked" class="img-fluid rounded" />
-                        </div>
 
-                        <!-- Top tekst -->
-                        <div class="col-12 col-md-6 order-2 order-md-2 text-md-end text-start" style="color:#242BAD">
-                            <div class="row">
-                                <div class="col-sm-5 cardBodyText"><p>Afstand: @(Product.DistanceToShop > 0 ? $"{Product.DistanceToShop} km" : "--")</p></div>
-                                <div class="col-sm-7 cardBodyText"><p>Varenr: @Product.ProductSku</p></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-5 cardBodyText"><p>Pris: @Product.Price kr.</p></div>
-                                <div class="col-sm-7 cardBodyText"><p>Butik: @Product.ShopName</p></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-5 cardBodyText"><p>Antal: @Product.Stock stk.</p></div>
-                                <div class="col-sm-7 cardBodyText"><p>Adresse: @Product.ShopAddress</p></div>
-                            </div>
                         </div>
                     </div>
 
@@ -70,7 +55,11 @@
                     <!-- Nederste række (tekst + kort) -->
                     <div class="row">
                         <!-- Nederste tekst -->
-                        <div class="col-12 col-md-3 order-3 order-md-4 d-flex flex-column text-center justify-content-center" style="color:#242BAD">
+                        <div class="col-12 col-lg-3 order-2 order-lg-2 d-flex flex-column text-center justify-content-center" style="color:#242BAD">
+                            <p><strong>Antal:</strong><br /> @Product.Stock stk.</p>
+                            <p><strong>Afstand:</strong><br /> @(Product.DistanceToShop > 0 ? $"{Product.DistanceToShop} km" : "--")</p>
+                            <p><strong>Pris:</strong><br /> @Product.Price kr.</p>
+
                             <p><strong>Butik:</strong><br /> @Product.ShopName</p>
                             <p><strong>Adresse:</strong><br /> @Product.ShopAddress, @Product.ShopPostArea @Product.ShopCity</p>
                             <p class="mx-auto text-center" style="width:140px">
@@ -80,7 +69,7 @@
                         </div>
 
                         <!-- Kort -->
-                        <div class="col-12 col-md-9 order-4 order-md-3">
+                        <div class="col-12 col-lg-9 order-3 order-lg-3">
                             <div class="ratio ratio-4x3">
                                 @if (!string.IsNullOrWhiteSpace(InputAdress))
                                 {

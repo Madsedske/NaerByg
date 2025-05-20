@@ -120,7 +120,7 @@ html, body {
 
     .input-address::placeholder {
         color: #242BAD;
-        font-size: 16px;
+        font-size: 14px;
         letter-spacing: 2px;
         font-weight: 100;
         font-style: italic;
@@ -271,7 +271,7 @@ html, body {
         background-color: #AD9224;
         border-radius: 5px;
         border-color: #AD9224;
-        font-weight:500;
+        font-weight: 500;
     }
 
 .navbar.nav-item:hover { /*hovedkategori list item hover*/
