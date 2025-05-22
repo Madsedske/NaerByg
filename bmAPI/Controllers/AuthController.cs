@@ -14,16 +14,6 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
-    [HttpGet("envtest")]
-    public IActionResult EnvTest()
-    {
-        return Ok(new
-        {
-            User = Environment.GetEnvironmentVariable("var_username"),
-            Pass = Environment.GetEnvironmentVariable("var_password")
-        });
-    }
-
     [HttpPost("banana")]
     public IActionResult Login([FromForm] string u, [FromForm] string p)
     {
